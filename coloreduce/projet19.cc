@@ -11,6 +11,7 @@ const int MAX = 255;
 const double EPSILON = 0.001;
 
 typedef vector<vector<array<int, 3>>> RGBImg;
+typedef vector<vector<double>> normalisedImg;
 
 //Décomposition du fichier d'entrée
 struct InputImage{
@@ -31,10 +32,11 @@ void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
 InputImage fileRead();
+normalisedImg thresholding(InputImage RGB);
 
 int main()
 {
-  InputImage IMG = fileRead(); //TODO-> ERROR HANDLING
+  InputImage IMG = fileRead();
 	return 0;
 }
 
@@ -79,8 +81,7 @@ InputImage fileRead(){
 			 }
 		}
 	}
-
-/*
+	/*
 	//DEBUG: PRINT TABLE
 	cout << "REDUCED COLOR TABLE:" << endl;
 	for (int i = 0; i <= IN.nBr; i++){
@@ -89,7 +90,7 @@ InputImage fileRead(){
 		}
 		cout << endl;
 	}
-*/
+	*/
 
 	//Entrée des nBr - 1 seuils
 	for (int i = 0; i < IN.nBr - 1; i++){
@@ -112,10 +113,31 @@ InputImage fileRead(){
 	//Pixels de l'image
 	for (int i = 0; i < IN.nbL; i++){
 		for(int j = 0; j < IN.nbC; j++){
-			for (int k = 0; k < 2; k++){
+			for (int k = 0; k <= 2; k++){
 				cin >> IN.inputImg[i][j][k];
 			}
 		}
 	}
-  return IN;
+	return IN;
 }
+
+//DRAFT
+normalisedImg thresholding(InputImage RGB){
+	normalisedImg normImg;
+	int sumRGBSquared = 0;
+
+	//READ RGB[i][j], and norm = sqrt(R^2 + G^2 + B^2) / (sqrt(3) * MAX))
+	for (int i = 0; i < RGB.nbL; i++){
+		for(int j = 0; j < RGB.nbC; j++){
+			for (int k = 0; k <= 2; k++){
+				sumRGBSquared += RGB.inputImg[i][j][k] * RGB.inputImg[i][j][k];
+			}
+			normImg[i][j] = sqrt(sumRGBSquared) / (sqrt(3) * MAX);
+			cout << normImg[i][j] << endl;
+		}
+	}
+
+	return normImg;
+}
+
+//RGBImg outpoutImage(RGB, nbL, nbC){}
