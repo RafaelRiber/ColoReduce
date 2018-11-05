@@ -58,7 +58,7 @@ void error_nb_filter(int nb_filter) //OK
 	cout << "Invalid number of filter: " << nb_filter << endl;
 }
 
-void error_filetype(string header)
+void error_filetype(string header) //OK
 {
 	cout << "Invalid filetype header: " << header << endl;
 }
