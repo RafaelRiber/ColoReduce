@@ -12,12 +12,12 @@ const int MAX = 255;
 const double EPSILON = 0.001;
 
 typedef vector<int> RGBImg;
-typedef vector<vector<double>> normalisedImg;
+typedef vector<vector<double>> normalizedImg;
 
 //Décomposition du fichier d'entrée
 struct ImageInput{
 	int nBr;
-	vector<array<int, 3>> reducedColors = {{0,0,0}};
+	vector<int> reducedColors = {0,0,0};
 	vector<double> thresholds = {0.0, 0.0};
 	int nbFilters;
 	string header;
@@ -33,35 +33,35 @@ void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
 ImageInput fileRead();
+normalizedImg normalize(ImageInput rgb);
 
 int main()
 {
 	ImageInput IMG = fileRead();
-
 	return 0;
 }
 
-void error_nbR(int nbR) //OK
+void error_nbR(int nbR)
 {
 	cout << "Invalid number of colors: " << nbR << endl;
 }
 
-void error_color(int id) //OK
+void error_color(int id)
 {
 	cout << "Invalid color value " << id << endl;
 }
 
-void error_threshold(double invalid_val) //OK
+void error_threshold(double invalid_val)
 {
 	cout << "Invalid threshold value: " << invalid_val << endl;
 }
 
-void error_nb_filter(int nb_filter) //OK
+void error_nb_filter(int nb_filter)
 {
 	cout << "Invalid number of filter: " << nb_filter << endl;
 }
 
-void error_filetype(string header) //OK
+void error_filetype(string header)
 {
 	cout << "Invalid filetype header: " << header << endl;
 }
@@ -74,13 +74,13 @@ ImageInput fileRead(){
 	if(IN.nBr < 2 or IN.nBr > MAX) error_nbR(IN.nBr);
 
 	//valeur des couleurs réduites
-	for (int i = 1; i <= IN.nBr; i++){
-		for (int j = 0; j <= 2; j++){
-			cin >> IN.reducedColors[i][j];
-			if(IN.reducedColors[i][j] < 0 or IN.reducedColors[i][j] > MAX){
-				error_color(IN.reducedColors[i][j]);
+	int tmp(0);
+	for (int i = 1; i <= 3*IN.nBr; i++){
+			cin >> tmp;
+			if(tmp < 0 or tmp > MAX){
+				error_color(tmp);
 			}
-		}
+			IN.reducedColors.push_back(tmp);
 	}
 
 	//Entrée des nBr - 1 seuils
@@ -121,10 +121,25 @@ ImageInput fileRead(){
 		cin >> IN.inputImg[i];
 	}
 
-	// cout << "Image successfully read:" << endl << endl;
+	cout << "Image successfully read:" << endl << endl;
 	for (int i = 0; i < IN.inputImg.size(); i++){
 		cout << i << " - " << IN.inputImg[i] << endl;
 		if ((i+1) % 3 == 0) cout << endl;
 	}
 	return IN;
+}
+
+normalizedImg normalize(ImageInput rgb){
+	normalizedImg normalized = {{0},{0}};
+
+	for (int i = 0; i < rgb.inputImg.size(); i = i + 3){
+		int tempR = rgb.inputImg[i];
+		int tempG = rgb.inputImg[i+1];
+		int tempB = rgb.inputImg[i+2];
+
+		cout << tempR << ";" << tempG << ";" << tempB << endl;
+	}
+
+
+	return normalized;
 }
