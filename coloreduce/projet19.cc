@@ -1,16 +1,17 @@
 /** \author Rafael Riber
- *  \date	dec 2018
- */
+*  \date	dec 2018
+*/
 #include <iostream>
 #include <vector>
 #include <array>
 #include <cmath>
+#include <string>
 using namespace std;
 
 const int MAX = 255;
 const double EPSILON = 0.001;
 
-typedef vector<vector<array<int, 3>>> RGBImg;
+typedef vector<int> RGBImg;
 typedef vector<vector<double>> normalisedImg;
 
 //Décomposition du fichier d'entrée
@@ -18,12 +19,12 @@ struct InputImage{
 	int nBr;
 	vector<array<int, 3>> reducedColors = {{0,0,0}};
 	vector<double> thresholds = {0.0, 0.0};
-	int nBfilters;
+	int nbFilters;
 	string header;
 	int nbC;
 	int nbL;
-	int MAX;
-	RGBImg inputImg = { { {0,0,0} } };
+	int max;
+	RGBImg inputImg;
 };
 
 void error_nbR(int nbR);
@@ -36,7 +37,8 @@ normalisedImg thresholding(InputImage RGB);
 
 int main()
 {
-  InputImage IMG = fileRead();
+	InputImage IMG = fileRead();
+
 	return 0;
 }
 
@@ -66,7 +68,7 @@ void error_filetype(string header) //OK
 }
 
 InputImage fileRead(){
-  InputImage IN;
+	InputImage IN;
 
 	//Nombre reduit de couleurs - min 2, max 255
 	cin >> IN.nBr;
@@ -77,20 +79,10 @@ InputImage fileRead(){
 		for (int j = 0; j <= 2; j++){
 			cin >> IN.reducedColors[i][j];
 			if(IN.reducedColors[i][j] < 0 or IN.reducedColors[i][j] > MAX){
-				 error_color(IN.reducedColors[i][j]);
-			 }
+				error_color(IN.reducedColors[i][j]);
+			}
 		}
 	}
-	/*
-	//DEBUG: PRINT TABLE
-	cout << "REDUCED COLOR TABLE:" << endl;
-	for (int i = 0; i <= IN.nBr; i++){
-		for (int j = 0; j <= 2; j++){
-			cout << IN.reducedColors[i][j] << endl;
-		}
-		cout << endl;
-	}
-	*/
 
 	//Entrée des nBr - 1 seuils
 	for (int i = 0; i < IN.nBr - 1; i++){
@@ -101,43 +93,36 @@ InputImage fileRead(){
 		}
 	}
 
-	cin >> IN.nBfilters;
-	if (IN.nBfilters <= 0) error_nb_filter(IN.nBfilters);
+	cin >> IN.nbFilters;
+	if (IN.nbFilters <= 0) error_nb_filter(IN.nbFilters);
+	cout << "filters: " << IN.nbFilters << endl;
 
 	cin >> IN.header;
 	if (IN.header != "P3") error_filetype(IN.header);
-	cin >> IN.nbC;
-	cin >> IN.nbL;
-	cin >> IN.MAX;
+	cout << "good header !" << endl;
 
-	//Pixels de l'image
-	for (int i = 0; i < IN.nbL; i++){
-		for(int j = 0; j < IN.nbC; j++){
-			for (int k = 0; k <= 2; k++){
-				cin >> IN.inputImg[i][j][k];
-			}
-		}
+	cin >> IN.nbC;
+	cout << "col: " << IN.nbC << endl;
+	cin >> IN.nbL;
+	cout << "lin: " << IN.nbL << endl;
+	cin >> IN.max;
+	cout << "max: " << IN.max << endl;
+
+	int imgSize = IN.nbL * IN.nbC;
+	int numPixels = 3 * imgSize;
+
+	IN.inputImg.resize(numPixels);
+
+	cout << numPixels << " pixels" << endl
+
+	for (int i = 0; i <= numPixels; i++){
+		cin >> IN.inputImg[i];
 	}
+	cout << "Image successfully read:" << endl;
+	/*
+	for (int i = 0; i < IN.inputImg.size(); i++){
+		cout << IN.inputImg[i] << endl;
+	}
+	*/
 	return IN;
 }
-
-//DRAFT
-normalisedImg thresholding(InputImage RGB){
-	normalisedImg normImg;
-	int sumRGBSquared = 0;
-
-	//READ RGB[i][j], and norm = sqrt(R^2 + G^2 + B^2) / (sqrt(3) * MAX))
-	for (int i = 0; i < RGB.nbL; i++){
-		for(int j = 0; j < RGB.nbC; j++){
-			for (int k = 0; k <= 2; k++){
-				sumRGBSquared += RGB.inputImg[i][j][k] * RGB.inputImg[i][j][k];
-			}
-			normImg[i][j] = sqrt(sumRGBSquared) / (sqrt(3) * MAX);
-			cout << normImg[i][j] << endl;
-		}
-	}
-
-	return normImg;
-}
-
-//RGBImg outpoutImage(RGB, nbL, nbC){}
