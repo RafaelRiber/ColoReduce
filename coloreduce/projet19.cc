@@ -15,7 +15,7 @@ typedef vector<int> RGBImg;
 typedef vector<vector<double>> normalisedImg;
 
 //Décomposition du fichier d'entrée
-struct InputImage{
+struct ImageInput{
 	int nBr;
 	vector<array<int, 3>> reducedColors = {{0,0,0}};
 	vector<double> thresholds = {0.0, 0.0};
@@ -32,12 +32,12 @@ void error_color(int id);
 void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
-InputImage fileRead();
-normalisedImg thresholding(InputImage RGB);
+ImageInput fileRead();
+normalisedImg thresholding(ImageInput RGB);
 
 int main()
 {
-	InputImage IMG = fileRead();
+	ImageInput IMG = fileRead();
 
 	return 0;
 }
@@ -67,8 +67,8 @@ void error_filetype(string header) //OK
 	cout << "Invalid filetype header: " << header << endl;
 }
 
-InputImage fileRead(){
-	InputImage IN;
+ImageInput fileRead(){
+	ImageInput IN;
 
 	//Nombre reduit de couleurs - min 2, max 255
 	cin >> IN.nBr;
@@ -108,21 +108,23 @@ InputImage fileRead(){
 	cin >> IN.max;
 	cout << "max: " << IN.max << endl;
 
-	int imgSize = IN.nbL * IN.nbC;
-	int numPixels = 3 * imgSize;
+	int numPixels = IN.nbL * IN.nbC;
+	int numValues = 3*numPixels;
 
-	IN.inputImg.resize(numPixels);
+	cout << numPixels << " pixels" << endl;
+	cout << numValues << " values" << endl;
 
-	cout << numPixels << " pixels" << endl
+	IN.inputImg.resize(numValues);
 
-	for (int i = 0; i <= numPixels; i++){
+	for (int i = 0; i < numValues; i++){
 		cin >> IN.inputImg[i];
 	}
-	cout << "Image successfully read:" << endl;
-	/*
+	cout << "Image successfully read:" << endl << endl;
+
 	for (int i = 0; i < IN.inputImg.size(); i++){
-		cout << IN.inputImg[i] << endl;
+		cout << i << " - " << IN.inputImg[i] << endl;
+		if ((i+1) % 3 == 0) cout << endl;
 	}
-	*/
+
 	return IN;
 }
