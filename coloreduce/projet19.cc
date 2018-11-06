@@ -24,7 +24,7 @@ struct ImageInput{
 	int nbC;
 	int nbL;
 	int max;
-	RGBImg inputImg;
+	RGBImg inputImg = {0,0,0,0};
 };
 
 void error_nbR(int nbR);
@@ -33,7 +33,6 @@ void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
 ImageInput fileRead();
-normalisedImg thresholding(ImageInput RGB);
 
 int main()
 {
@@ -95,36 +94,37 @@ ImageInput fileRead(){
 
 	cin >> IN.nbFilters;
 	if (IN.nbFilters <= 0) error_nb_filter(IN.nbFilters);
-	cout << "filters: " << IN.nbFilters << endl;
+
+	// cout << "filters: " << IN.nbFilters << endl;
 
 	cin >> IN.header;
 	if (IN.header != "P3") error_filetype(IN.header);
-	cout << "good header !" << endl;
+
+	// cout << "good header !" << endl;
 
 	cin >> IN.nbC;
-	cout << "col: " << IN.nbC << endl;
 	cin >> IN.nbL;
-	cout << "lin: " << IN.nbL << endl;
 	cin >> IN.max;
-	cout << "max: " << IN.max << endl;
 
 	int numPixels = IN.nbL * IN.nbC;
 	int numValues = 3*numPixels;
 
-	cout << numPixels << " pixels" << endl;
-	cout << numValues << " values" << endl;
+	// cout << "col: " << IN.nbC << endl;
+	// cout << "lin: " << IN.nbL << endl;
+	// cout << "max: " << IN.max << endl;
+	// cout << numPixels << " pixels" << endl;
+	// cout << numValues << " values" << endl;
 
 	IN.inputImg.resize(numValues);
 
 	for (int i = 0; i < numValues; i++){
 		cin >> IN.inputImg[i];
 	}
-	cout << "Image successfully read:" << endl << endl;
 
+	// cout << "Image successfully read:" << endl << endl;
 	for (int i = 0; i < IN.inputImg.size(); i++){
 		cout << i << " - " << IN.inputImg[i] << endl;
 		if ((i+1) % 3 == 0) cout << endl;
 	}
-
 	return IN;
 }
