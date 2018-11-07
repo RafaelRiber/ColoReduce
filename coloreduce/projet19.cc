@@ -11,20 +11,24 @@ using namespace std;
 const int MAX = 255;
 const double EPSILON = 0.001;
 
-typedef vector<int> RGBImg;
+typedef struct {
+    int r, g, b;
+} Pixel;
+
 typedef vector<vector<double>> normalizedImg;
+typedef vector<vector<Pixel>>  rgbImg;
 
 //Décomposition du fichier d'entrée
 struct ImageInput{
-	int nBr;
-	vector<int> reducedColors = {0,0,0};
-	vector<double> thresholds = {0.0, 0.0};
-	int nbFilters;
-	string header;
-	int nbC;
-	int nbL;
-	int max;
-	RGBImg inputImg = {0,0,0,0};
+    int nBr;
+    vector<Pixel> reducedColors;
+    vector<double> thresholds;
+    int nbFilters;
+    string header;
+    int nbC;
+    int nbL;
+    int max;
+    rgbImg inputImg;
 };
 
 void error_nbR(int nbR);
@@ -32,160 +36,170 @@ void error_color(int id);
 void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
+void error_filetype(string header);
+
 ImageInput fileRead();
 normalizedImg normalize(ImageInput rgb);
 
 int main()
 {
 	ImageInput IMG = fileRead();
-	normalize(IMG);
 
-	cout << "DONE" << endl;
+//    for (int i = 0; i < IMG.inputImg.size(); i++){
+//        for (int j = 0; j < IMG.inputImg[i].size(); j++){
+//            cout << IMG.inputImg[i][j].r << endl;
+//            cout << IMG.inputImg[i][j].g << endl;
+//            cout << IMG.inputImg[i][j].b << endl;
+//        }
+//    }
+
+    normalizedImg norm = normalize(IMG);
+
+    cout << "DONE" << endl;
 	return 0;
 }
 
 void error_nbR(int nbR)
 {
 	cout << "Invalid number of colors: " << nbR << endl;
+    exit(0);
 }
 
 void error_color(int id)
 {
 	cout << "Invalid color value " << id << endl;
+    exit(0);
 }
 
 void error_threshold(double invalid_val)
 {
 	cout << "Invalid threshold value: " << invalid_val << endl;
+    exit(0);
 }
 
 void error_nb_filter(int nb_filter)
 {
 	cout << "Invalid number of filter: " << nb_filter << endl;
+    exit(0);
 }
 
 void error_filetype(string header)
 {
 	cout << "Invalid filetype header: " << header << endl;
+    exit(0);
 }
 
 ImageInput fileRead(){
-	ImageInput IN;
+	ImageInput input;
 
 	//Nombre reduit de couleurs - min 2, max 255
-	cin >> IN.nBr;
-	if(IN.nBr < 2 or IN.nBr > MAX) error_nbR(IN.nBr);
+	cin >> input.nBr;
+	if(input.nBr < 2 or input.nBr > MAX) error_nbR(input.nBr);
+
+	input.reducedColors.resize(input.nBr + 1);
+	input.reducedColors[0].r = 0;
+	input.reducedColors[0].g = 0;
+	input.reducedColors[0].b = 0;
 
 	//valeur des couleurs réduites
-	int tmp(0);
-	for (int i = 1; i <= 3*IN.nBr; i++){
-			cin >> tmp;
-			if(tmp < 0 or tmp > MAX){
-				error_color(tmp);
-			}
-			IN.reducedColors.push_back(tmp);
-	}
+	for (int i = 1; i <= input.nBr; i++){
+		int r(0), g(0), b(0);
 
-	//Entrée des nBr - 1 seuils
-	for (int i = 0; i < IN.nBr - 1; i++){
-		cin >> IN.thresholds[i];
-		if (i >= 1){
-			double deltaThresholds = abs(IN.thresholds[i] - IN.thresholds[i-1]);
-			if(deltaThresholds < EPSILON) error_threshold(IN.thresholds[i]);
+		cin >> r;
+		cin >> g;
+		cin >> b;
+
+		if(r < 0 or r > MAX){
+			error_color(r);
 		}
+		if(g < 0 or g > MAX){
+			error_color(g);
+		}
+		if(b < 0 or b > MAX){
+			error_color(b);
+		}
+		input.reducedColors[i].r = r;
+		input.reducedColors[i].g = g;
+		input.reducedColors[i].b = b;
 	}
 
-	cin >> IN.nbFilters;
-	if (IN.nbFilters <= 0) error_nb_filter(IN.nbFilters);
+	//  Entrée des nBr - 1 seuils
+	//  Calcule l'écart entre le i-ème seuil et le précédent, et vérifie que celui-ci
+	//  soit supérieur à la constante EPSILON, afin d'éviter deux seuls identiques
 
-	// cout << "filters: " << IN.nbFilters << endl;
+    input.thresholds.resize(input.nBr + 1);
+	input.thresholds[0] = 0;
 
-	cin >> IN.header;
-	if (IN.header != "P3") error_filetype(IN.header);
-
-	// cout << "good header !" << endl;
-
-	cin >> IN.nbC;
-	cin >> IN.nbL;
-	cin >> IN.max;
-
-	int numPixels = IN.nbL * IN.nbC;
-	int numValues = 3*numPixels;
-
-	// cout << "col: " << IN.nbC << endl;
-	// cout << "lin: " << IN.nbL << endl;
-	// cout << "max: " << IN.max << endl;
-	// cout << numPixels << " pixels" << endl;
-	// cout << numValues << " values" << endl;
-
-	IN.inputImg.resize(numValues);
-
-	for (int i = 0; i < numValues; i++){
-		cin >> IN.inputImg[i];
+	for (int i = 1; i < input.nBr; i++){
+		cin >> input.thresholds[i];
+		double deltaThresholds = abs(input.thresholds[i] - input.thresholds[i-1]);
+		if(deltaThresholds < EPSILON) error_threshold(input.thresholds[i]);
 	}
 
-	// cout << "Image successfully read:" << endl << endl;
-	// for (int i = 0; i < IN.inputImg.size(); i++){
-	// 	cout << i << " - " << IN.inputImg[i] << endl;
-	// 	if ((i+1) % 3 == 0) cout << endl;
-	// }
-	return IN;
+	input.thresholds[input.nBr] = 1.0;
+
+	cin >> input.nbFilters;
+	if (input.nbFilters <= 0) error_nb_filter(input.nbFilters);
+
+	cin >> input.header;
+	if (input.header != "P3") error_filetype(input.header);
+
+	cin >> input.nbC;
+	cin >> input.nbL;
+	cin >> input.max;
+
+    input.inputImg.resize(input.nbC);       //CORRECT
+    for (int i = 0; i < input.nbL; i++)
+        input.inputImg[i].resize(input.nbL);
+
+
+    int x = input.inputImg.size();
+    int y = input.inputImg[0].size();
+
+    // Pixels de l'image d'entrée
+	for (int i = 0; i < x; i++){
+	    for (int j = 0; j < y; j++){
+			int r(0), g(0), b(0);
+			cin >> r;
+			cin >> g;
+			cin >> b;
+			if(r < 0 or r > MAX){
+				error_color(r);
+			}
+			if(g < 0 or g > MAX){
+				error_color(g);
+			}
+			if(b < 0 or b > MAX){
+				error_color(b);
+			}
+			input.inputImg[i][j].r = r;
+			input.inputImg[i][j].g = g;
+			input.inputImg[i][j].b = b;
+	    }
+	}
+	return input;
 }
 
 normalizedImg normalize(ImageInput rgb){
-	vector<double> normalizedVector;
+    normalizedImg norm;
 
-	for (int k = 0; k < rgb.inputImg.size(); k = k + 3){
-		int r = rgb.inputImg[k];
-		int g = rgb.inputImg[k+1];
-		int b = rgb.inputImg[k+2];
+    norm.resize(rgb.nbC);
+    for (int i = 0; i < rgb.nbL; i++)
+        norm[i].resize(rgb.nbL);
 
-		//cout << r << ";" << g << ";" << b << endl;
+    int x = norm.size();
+    int y = norm[0].size();
 
-		r *= r;
-		g *= g;
-		b *= b;
-		double normPixel = sqrt(r + g + b)/(sqrt(3)*(MAX));
-		normalizedVector.push_back(normPixel);
-	}
-	 cout << "size: " << normalizedVector.size() << endl;
-	 cout << "nbL: " << rgb.nbL << endl;
-	 cout << "nbC: " << rgb.nbC << endl;
+    for (int i = 0; i < x; i++){
+        for (int j = 0; j < y; j++){
+            int r = rgb.inputImg[i][j].r;
+            int g = rgb.inputImg[i][j].g;
+            int b = rgb.inputImg[i][j].b;
 
-	//DEBUG - PRINT list of normalized vals
-	// for (int i = 0; i < normalizedVector.size(); i++){
-	// 	cout << i << " - " << normalizedVector[i] << endl;
-	// }
+            double normInt = sqrt(r*r + g*g + b*b) / (sqrt(3) * MAX);
 
-	//convert to 2D vector
-	normalizedImg norm = {{0},{0}};
-	int j(0);
-	int k(0);
-
-	for (int i = 0; i < (rgb.nbL * rgb.nbC); i++){
-
-		cout << "i: " << i << " (" << j << ";" << k << ") - " << normalizedVector[i]<<endl;
-
-
-		//BUG A i=4
-
-
-		norm[j][k] = normalizedVector[i];
-
-		cout << "IIIII  " << i;
-		k++;
-		if ((i+1) % rgb.nbC == 0){
-			j++;
-			k = 0;
-		}
-	}
-
-	//DEBUG - Print norm matrix
-	// for (int i = 0; i < rgb.nbL; i++){
-	// 	for (int j = 0; j < rgb.nbC; j++){
-	// 		cout << norm[i][j] << endl;
-	// 	}
-	// }
-
-	return norm;
+            norm[i][j] = normInt;
+        }
+    }
+    return norm;
 }
