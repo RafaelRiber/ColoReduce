@@ -38,6 +38,9 @@ normalizedImg normalize(ImageInput rgb);
 int main()
 {
 	ImageInput IMG = fileRead();
+	normalize(IMG);
+
+	cout << "DONE" << endl;
 	return 0;
 }
 
@@ -121,25 +124,68 @@ ImageInput fileRead(){
 		cin >> IN.inputImg[i];
 	}
 
-	cout << "Image successfully read:" << endl << endl;
-	for (int i = 0; i < IN.inputImg.size(); i++){
-		cout << i << " - " << IN.inputImg[i] << endl;
-		if ((i+1) % 3 == 0) cout << endl;
-	}
+	// cout << "Image successfully read:" << endl << endl;
+	// for (int i = 0; i < IN.inputImg.size(); i++){
+	// 	cout << i << " - " << IN.inputImg[i] << endl;
+	// 	if ((i+1) % 3 == 0) cout << endl;
+	// }
 	return IN;
 }
 
 normalizedImg normalize(ImageInput rgb){
-	normalizedImg normalized = {{0},{0}};
+	vector<double> normalizedVector;
 
-	for (int i = 0; i < rgb.inputImg.size(); i = i + 3){
-		int tempR = rgb.inputImg[i];
-		int tempG = rgb.inputImg[i+1];
-		int tempB = rgb.inputImg[i+2];
+	for (int k = 0; k < rgb.inputImg.size(); k = k + 3){
+		int r = rgb.inputImg[k];
+		int g = rgb.inputImg[k+1];
+		int b = rgb.inputImg[k+2];
 
-		cout << tempR << ";" << tempG << ";" << tempB << endl;
+		//cout << r << ";" << g << ";" << b << endl;
+
+		r *= r;
+		g *= g;
+		b *= b;
+		double normPixel = sqrt(r + g + b)/(sqrt(3)*(MAX));
+		normalizedVector.push_back(normPixel);
+	}
+	 cout << "size: " << normalizedVector.size() << endl;
+	 cout << "nbL: " << rgb.nbL << endl;
+	 cout << "nbC: " << rgb.nbC << endl;
+
+	//DEBUG - PRINT list of normalized vals
+	// for (int i = 0; i < normalizedVector.size(); i++){
+	// 	cout << i << " - " << normalizedVector[i] << endl;
+	// }
+
+	//convert to 2D vector
+	normalizedImg norm = {{0},{0}};
+	int j(0);
+	int k(0);
+
+	for (int i = 0; i < (rgb.nbL * rgb.nbC); i++){
+
+		cout << "i: " << i << " (" << j << ";" << k << ") - " << normalizedVector[i]<<endl;
+
+
+		//BUG A i=4
+
+
+		norm[j][k] = normalizedVector[i];
+
+		cout << "IIIII  " << i;
+		k++;
+		if ((i+1) % rgb.nbC == 0){
+			j++;
+			k = 0;
+		}
 	}
 
+	//DEBUG - Print norm matrix
+	// for (int i = 0; i < rgb.nbL; i++){
+	// 	for (int j = 0; j < rgb.nbC; j++){
+	// 		cout << norm[i][j] << endl;
+	// 	}
+	// }
 
-	return normalized;
+	return norm;
 }
