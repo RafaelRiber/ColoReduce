@@ -1,5 +1,6 @@
 
 coloreduce/.idea/workspace.xml
+coloreduce/cmake-build-debug/*
 coloreduce/cmake-build-debug/cmake_install.cmake
 coloreduce/cmake-build-debug/CMakeCache.txt
 coloreduce/cmake-build-debug/CMakeFiles/3.12.2/CMakeCCompiler.cmake
