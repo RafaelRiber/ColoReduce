@@ -46,29 +46,25 @@ int main()
     ImageInput IMG = fileRead();
 
     //PRINT RGB
-    for (int i = 0; i < IMG.inputImg.size(); i++){
-        for (int j = 0; j < IMG.inputImg[i].size(); j++){
-            cout << "(";
-            cout << IMG.inputImg[i][j].r << ";";
-            cout << IMG.inputImg[i][j].g << ";";
-            cout << IMG.inputImg[i][j].b << ") ";
-        }
-        cout << endl;
-    }
+//    for (int i = 0; i < IMG.nbL; i++){
+//        for (int j = 0; j < IMG.nbC; j++){
+//            cout << "(";
+//            cout << IMG.inputImg[i][j].r << ";";
+//            cout << IMG.inputImg[i][j].g << ";";
+//            cout << IMG.inputImg[i][j].b << ") ";
+//            cout << endl;
+//        }
+//    }
 
     normalizedImg norm = normalize(IMG);
 
-    cout << endl;
-
     //PRINT NORM
-    for (int i = 0; i < norm.size(); i++){
-        for (int j = 0; j < norm[i].size(); j++){ ;
-            cout << norm[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    cout << "DONE" << endl;
+//    for (int i = 0; i < IMG.nbL; i++){
+//        for (int j = 0; j < IMG.nbC; j++){
+//            cout << norm[i][j];
+//            cout << endl;
+//        }
+//    }
     return 0;
 }
 
@@ -152,7 +148,7 @@ ImageInput fileRead(){
     input.thresholds[input.nBr] = 1.0;
 
     cin >> input.nbFilters;
-    if (input.nbFilters <= 0) error_nb_filter(input.nbFilters);
+    if (input.nbFilters < 0) error_nb_filter(input.nbFilters);
 
     cin >> input.header;
     if (input.header != "P3") error_filetype(input.header);
@@ -161,16 +157,13 @@ ImageInput fileRead(){
     cin >> input.nbL;
     cin >> input.max;
 
-    input.inputImg.resize(input.nbC);       //CORRECT
-    for (int i = 0; i <= input.nbL; i++)
-        input.inputImg[i].resize(input.nbL);
-
-
-    int x = input.inputImg.size();
+    input.inputImg.resize(input.nbL);       //CORRECT
+    for (int i = 0; i < input.nbC; i++)
+        input.inputImg[i].resize(input.nbC);
 
     // Pixels de l'image d'entrée
-    for (int i = 0; i < x; i++){
-        for (int j = 0; j < input.inputImg[i].size(); j++){
+    for (int i = 0; i < input.nbL; i++){
+        for (int j = 0; j < input.nbC; j++){
             int r(0), g(0), b(0);
             cin >> r;
             cin >> g;
@@ -195,14 +188,13 @@ ImageInput fileRead(){
 normalizedImg normalize(ImageInput rgb){
     normalizedImg norm;
 
-    norm.resize(rgb.nbC);
-    for (int i = 0; i <= rgb.nbL; i++)
-        norm[i].resize(rgb.nbL);
+    norm.resize(rgb.nbL);       //CORRECT
+    for (int i = 0; i < rgb.nbC; i++)
+        norm[i].resize(rgb.nbC);
 
-    int x = norm.size();
 
-    for (int i = 0; i < x; i++){
-        for (int j = 0; j < norm[i].size(); j++){
+    for (int i = 0; i < rgb.nbL; i++){
+        for (int j = 0; j < rgb.nbC; j++){
             int r = rgb.inputImg[i][j].r;
             int g = rgb.inputImg[i][j].g;
             int b = rgb.inputImg[i][j].b;
