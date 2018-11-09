@@ -15,12 +15,12 @@ typedef struct {
     int r, g, b;
 } Pixel;
 
-typedef vector<vector<double>> normalizedImg;
+typedef vector<vector<int>> normalizedImg;
 typedef vector<vector<Pixel>>  rgbImg;
 
 //Décomposition du fichier d'entrée
 struct ImageInput{
-    int nBr;
+    int nbR;
     vector<Pixel> reducedColors;
     vector<double> thresholds;
     int nbFilters;
@@ -40,29 +40,21 @@ void error_filetype(string header);
 
 ImageInput fileRead();
 normalizedImg normalize(ImageInput rgb);
+void printRGB(ImageInput rgb);
 
 int main()
 {
     ImageInput IMG = fileRead();
 
-    //PRINT RGB
-//    for (int i = 0; i < IMG.nbL; i++){
-//        for (int j = 0; j < IMG.nbC; j++){
-//            cout << "(";
-//            cout << IMG.inputImg[i][j].r << ";";
-//            cout << IMG.inputImg[i][j].g << ";";
-//            cout << IMG.inputImg[i][j].b << ") ";
-//            cout << endl;
-//        }
-//    }
+    printRGB(IMG);
 
     normalizedImg norm = normalize(IMG);
 
     //PRINT NORM
 //    for (int i = 0; i < IMG.nbL; i++){
 //        for (int j = 0; j < IMG.nbC; j++){
-//            cout << norm[i][j];
-//            cout << endl;
+//            cout << norm[i][j] << " ";
+//            if ((j + 1) % IMG.nbC == 0) cout << endl;
 //        }
 //    }
     return 0;
@@ -70,30 +62,25 @@ int main()
 
 void error_nbR(int nbR)
 {
-    cout << "Invalid number of colors: " << nbR << endl;
-    exit(0);
+  cout << "Invalid number of colors: " << nbR << endl;
 }
 
 void error_color(int id)
 {
-    cout << "Invalid color value " << id << endl;
-    exit(0);
+  cout << "Invalid color value " << id << endl;
 }
 
 void error_threshold(double invalid_val)
 {
-    cout << "Invalid threshold value: " << invalid_val << endl;
-    exit(0);
+  cout << "Invalid threshold value: " << invalid_val << endl;
 }
 
 void error_nb_filter(int nb_filter)
 {
-    cout << "Invalid number of filter: " << nb_filter << endl;
-    exit(0);
+  cout << "Invalid number of filter: " << nb_filter << endl;
 }
 
-void error_filetype(string header)
-{
+void error_filetype(string header) {
     cout << "Invalid filetype header: " << header << endl;
     exit(0);
 }
@@ -102,16 +89,16 @@ ImageInput fileRead(){
     ImageInput input;
 
     //Nombre reduit de couleurs - min 2, max 255
-    cin >> input.nBr;
-    if(input.nBr < 2 or input.nBr > MAX) error_nbR(input.nBr);
+    cin >> input.nbR;
+    if(input.nbR < 2 or input.nbR > MAX) error_nbR(input.nbR);
 
-    input.reducedColors.resize(input.nBr + 1);
+    input.reducedColors.resize(input.nbR + 1);
     input.reducedColors[0].r = 0;
     input.reducedColors[0].g = 0;
     input.reducedColors[0].b = 0;
 
     //valeur des couleurs réduites
-    for (int i = 1; i <= input.nBr; i++){
+    for (int i = 1; i <= input.nbR; i++){
         int r(0), g(0), b(0);
 
         cin >> r;
@@ -132,20 +119,20 @@ ImageInput fileRead(){
         input.reducedColors[i].b = b;
     }
 
-    //  Entrée des nBr - 1 seuils
+    //  Entrée des nbR - 1 seuils
     //  Calcule l'écart entre le i-ème seuil et le précédent, et vérifie que celui-ci
     //  soit supérieur à la constante EPSILON, afin d'éviter deux seuls identiques
 
-    input.thresholds.resize(input.nBr + 1);
+    input.thresholds.resize(input.nbR + 1);
     input.thresholds[0] = 0;
 
-    for (int i = 1; i < input.nBr; i++){
+    for (int i = 1; i < input.nbR; i++){
         cin >> input.thresholds[i];
         double deltaThresholds = abs(input.thresholds[i] - input.thresholds[i-1]);
         if(deltaThresholds < EPSILON) error_threshold(input.thresholds[i]);
     }
 
-    input.thresholds[input.nBr] = 1.0;
+    input.thresholds[input.nbR] = 1.0;
 
     cin >> input.nbFilters;
     if (input.nbFilters < 0) error_nb_filter(input.nbFilters);
@@ -188,6 +175,8 @@ ImageInput fileRead(){
 normalizedImg normalize(ImageInput rgb){
     normalizedImg norm;
 
+    int nbR = rgb.nbR;
+
     norm.resize(rgb.nbL);       //CORRECT
     for (int i = 0; i < rgb.nbC; i++)
         norm[i].resize(rgb.nbC);
@@ -201,10 +190,31 @@ normalizedImg normalize(ImageInput rgb){
 
             double normInt = sqrt(r*r + g*g + b*b) / (sqrt(3) * MAX);
 
-            norm[i][j] = normInt;
+            for (int k = 0; k <= nbR; k++){
+                if (normInt >= rgb.thresholds[k-1] && normInt < rgb.thresholds[k]){
+                    norm[i][j] = k;
+                }
+
+                if (k == nbR && normInt >= rgb.thresholds[k-1]){
+                    norm[i][j] = nbR;
+                }
+            }
         }
     }
     return norm;
+}
+
+
+void printRGB(ImageInput rgb){
+  for (int i = 0; i < rgb.nbL; i++){
+    for (int j = 0; j < rgb.nbC; j++){
+      cout << " (";
+      cout << rgb.inputImg[i][j].r << ";";
+      cout << rgb.inputImg[i][j].g << ";";
+      cout << rgb.inputImg[i][j].b << ") ";
+      if ((j + 1) % rgb.nbC == 0) cout << endl;
+    }
+  }
 }
 
 
