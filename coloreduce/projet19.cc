@@ -6,10 +6,13 @@
 #include <array>
 #include <cmath>
 #include <string>
+
+#include <algorithm>
+
 using namespace std;
 
-const int MAX = 255;
-const double EPSILON = 0.001;
+const int maxVal = 255;
+const double epsilon = 0.001;
 
 typedef struct {
     int r, g, b;
@@ -36,19 +39,21 @@ void error_color(int id);
 void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
-void error_filetype(string header);
-
 ImageInput fileRead();
 normalizedImg normalize(ImageInput rgb);
+vector <int> getSortedNeighbors(normalizedImg norm, int l, int c);
+normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm);
+
 void printRGB(ImageInput rgb);
 
 int main()
 {
     ImageInput IMG = fileRead();
 
-    printRGB(IMG);
+//    printRGB(IMG);
 
     normalizedImg norm = normalize(IMG);
+
 
     //PRINT NORM
 //    for (int i = 0; i < IMG.nbL; i++){
@@ -57,32 +62,29 @@ int main()
 //            if ((j + 1) % IMG.nbC == 0) cout << endl;
 //        }
 //    }
+
+    normalizedImg filtered = filter(IMG.nbFilters, IMG.nbL, IMG.nbC, norm);
     return 0;
 }
 
 void error_nbR(int nbR)
 {
-  cout << "Invalid number of colors: " << nbR << endl;
+    cout << "Invalid number of colors: " << nbR << endl;
 }
 
 void error_color(int id)
 {
-  cout << "Invalid color value " << id << endl;
+    cout << "Invalid color value " << id << endl;
 }
 
 void error_threshold(double invalid_val)
 {
-  cout << "Invalid threshold value: " << invalid_val << endl;
+    cout << "Invalid threshold value: " << invalid_val << endl;
 }
 
 void error_nb_filter(int nb_filter)
 {
-  cout << "Invalid number of filter: " << nb_filter << endl;
-}
-
-void error_filetype(string header) {
-    cout << "Invalid filetype header: " << header << endl;
-    exit(0);
+    cout << "Invalid number of filter: " << nb_filter << endl;
 }
 
 ImageInput fileRead(){
@@ -90,7 +92,10 @@ ImageInput fileRead(){
 
     //Nombre reduit de couleurs - min 2, max 255
     cin >> input.nbR;
-    if(input.nbR < 2 or input.nbR > MAX) error_nbR(input.nbR);
+    if(input.nbR < 2 or input.nbR > maxVal){
+        error_nbR(input.nbR);
+        exit(0);
+    }
 
     input.reducedColors.resize(input.nbR + 1);
     input.reducedColors[0].r = 0;
@@ -99,29 +104,28 @@ ImageInput fileRead(){
 
     //valeur des couleurs réduites
     for (int i = 1; i <= input.nbR; i++){
-        int r(0), g(0), b(0);
 
-        cin >> r;
-        cin >> g;
-        cin >> b;
+        cin >> input.reducedColors[i].r;
+        cin >> input.reducedColors[i].g;
+        cin >> input.reducedColors[i].b;
 
-        if(r < 0 or r > MAX){
-            error_color(r);
+        if(input.reducedColors[i].r < 0 or input.reducedColors[i].r > maxVal){
+            error_color(i);
+            exit(0);
         }
-        if(g < 0 or g > MAX){
-            error_color(g);
+        if(input.reducedColors[i].g < 0 or input.reducedColors[i].g > maxVal){
+            error_color(i);
+            exit(0);
         }
-        if(b < 0 or b > MAX){
-            error_color(b);
+        if(input.reducedColors[i].b < 0 or input.reducedColors[i].b > maxVal){
+            error_color(i);
+            exit(0);
         }
-        input.reducedColors[i].r = r;
-        input.reducedColors[i].g = g;
-        input.reducedColors[i].b = b;
     }
 
     //  Entrée des nbR - 1 seuils
     //  Calcule l'écart entre le i-ème seuil et le précédent, et vérifie que celui-ci
-    //  soit supérieur à la constante EPSILON, afin d'éviter deux seuls identiques
+    //  soit supérieur à la constante epsilon, afin d'éviter deux seuls identiques
 
     input.thresholds.resize(input.nbR + 1);
     input.thresholds[0] = 0;
@@ -129,44 +133,52 @@ ImageInput fileRead(){
     for (int i = 1; i < input.nbR; i++){
         cin >> input.thresholds[i];
         double deltaThresholds = abs(input.thresholds[i] - input.thresholds[i-1]);
-        if(deltaThresholds < EPSILON) error_threshold(input.thresholds[i]);
+        if(deltaThresholds < epsilon){
+            error_threshold(input.thresholds[i]);
+            exit(0);
+        }
+        if(input.thresholds[i] < input.thresholds[i-1]){
+            error_threshold(input.thresholds[i]);
+        }
     }
 
     input.thresholds[input.nbR] = 1.0;
 
     cin >> input.nbFilters;
-    if (input.nbFilters < 0) error_nb_filter(input.nbFilters);
+    if (input.nbFilters < 0) {
+        error_nb_filter(input.nbFilters);
+        exit(0);
+    }
 
     cin >> input.header;
-    if (input.header != "P3") error_filetype(input.header);
-
     cin >> input.nbC;
     cin >> input.nbL;
     cin >> input.max;
 
-    input.inputImg.resize(input.nbL);       //CORRECT
+    input.inputImg.resize(input.nbL);
     for (int i = 0; i < input.nbC; i++)
         input.inputImg[i].resize(input.nbC);
 
     // Pixels de l'image d'entrée
     for (int i = 0; i < input.nbL; i++){
         for (int j = 0; j < input.nbC; j++){
-            int r(0), g(0), b(0);
-            cin >> r;
-            cin >> g;
-            cin >> b;
-            if(r < 0 or r > MAX){
-                error_color(r);
+
+            cin >> input.inputImg[i][j].r;
+            cin >> input.inputImg[i][j].g;
+            cin >> input.inputImg[i][j].b;
+
+            if(input.inputImg[i][j].r < 0 or input.inputImg[i][j].r > maxVal){
+                error_color(input.inputImg[i][j].r);
+                exit(0);
             }
-            if(g < 0 or g > MAX){
-                error_color(g);
+            if(input.inputImg[i][j].g < 0 or input.inputImg[i][j].g > maxVal){
+                error_color(input.inputImg[i][j].g);
+                exit(0);
             }
-            if(b < 0 or b > MAX){
-                error_color(b);
+            if(input.inputImg[i][j].b < 0 or input.inputImg[i][j].b > maxVal){
+                error_color(input.inputImg[i][j].b);
+                exit(0);
             }
-            input.inputImg[i][j].r = r;
-            input.inputImg[i][j].g = g;
-            input.inputImg[i][j].b = b;
         }
     }
     return input;
@@ -177,7 +189,7 @@ normalizedImg normalize(ImageInput rgb){
 
     int nbR = rgb.nbR;
 
-    norm.resize(rgb.nbL);       //CORRECT
+    norm.resize(rgb.nbL);
     for (int i = 0; i < rgb.nbC; i++)
         norm[i].resize(rgb.nbC);
 
@@ -188,15 +200,14 @@ normalizedImg normalize(ImageInput rgb){
             int g = rgb.inputImg[i][j].g;
             int b = rgb.inputImg[i][j].b;
 
-            double normInt = sqrt(r*r + g*g + b*b) / (sqrt(3) * MAX);
+            double normInt = sqrt(r*r + g*g + b*b) / (sqrt(3) * maxVal);
 
             for (int k = 0; k <= nbR; k++){
-                if (normInt >= rgb.thresholds[k-1] && normInt < rgb.thresholds[k]){
-                    norm[i][j] = k;
-                }
-
                 if (k == nbR && normInt >= rgb.thresholds[k-1]){
                     norm[i][j] = nbR;
+                }
+                if (normInt >= rgb.thresholds[k-1] && normInt < rgb.thresholds[k]){
+                    norm[i][j] = k;
                 }
             }
         }
@@ -204,28 +215,47 @@ normalizedImg normalize(ImageInput rgb){
     return norm;
 }
 
+vector<int> getSortedNeighbors(normalizedImg norm, int l, int c){
+    vector<int> sortedNeighbors;
+
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            if (abs(i) + abs(j) != 0) sortedNeighbors.push_back(norm[c + i][l + j]);
+        }
+    }
+
+    sort(sortedNeighbors.begin(), sortedNeighbors.end());
+
+    return sortedNeighbors;
+}
 
 void printRGB(ImageInput rgb){
-  for (int i = 0; i < rgb.nbL; i++){
-    for (int j = 0; j < rgb.nbC; j++){
-      cout << " (";
-      cout << rgb.inputImg[i][j].r << ";";
-      cout << rgb.inputImg[i][j].g << ";";
-      cout << rgb.inputImg[i][j].b << ") ";
-      if ((j + 1) % rgb.nbC == 0) cout << endl;
+    for (int i = 0; i < rgb.nbL; i++){
+        for (int j = 0; j < rgb.nbC; j++){
+            cout << " (";
+            cout << rgb.inputImg[i][j].r << ";";
+            cout << rgb.inputImg[i][j].g << ";";
+            cout << rgb.inputImg[i][j].b << ") ";
+            if ((j + 1) % rgb.nbC == 0) cout << endl;
+        }
     }
-  }
 }
 
 
-//TODO RESIZE FUNCT
+normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm){
+    normalizedImg filtered;
 
-/*
-    input.inputImg.resize(input.nbC);       //CORRECT
-    for (int i = 0; i <= input.nbL; i++)
-        input.inputImg[i].resize(input.nbL);
+    for (int n = 1; n <= nbF; n++){
+        for (int i = 1; i <= nbL-2; i++) {
+            for (int j = 1; j <= nbC-2; j++){
+                vector<int> neighbors = getSortedNeighbors(norm, i, j); // O(n log(n))
 
+                //FIND MOST FREQUENT
+            }
+        }
+    }
 
-    int x = input.inputImg.size();
-    int y = input.inputImg[0].size();
- */
+    return filtered;
+
+    // BLACK EDGE !
+}
