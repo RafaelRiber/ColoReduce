@@ -41,8 +41,9 @@ void error_nb_filter(int nb_filter);
 
 ImageInput fileRead();
 normalizedImg normalize(ImageInput rgb);
-vector <int> getSortedNeighbors(normalizedImg norm, int l, int c);
+vector <int> getNeighbors(normalizedImg norm, int l, int c);
 normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm);
+int pixelVal(vector<int> neighbors);
 
 void printRGB(ImageInput rgb);
 
@@ -56,14 +57,31 @@ int main()
 
 
     //PRINT NORM
-//    for (int i = 0; i < IMG.nbL; i++){
-//        for (int j = 0; j < IMG.nbC; j++){
-//            cout << norm[i][j] << " ";
-//            if ((j + 1) % IMG.nbC == 0) cout << endl;
-//        }
-//    }
+    for (int i = 0; i < IMG.nbL; i++){
+        for (int j = 0; j < IMG.nbC; j++){
+            cout << norm[i][j] << " ";
+            if ((j + 1) % IMG.nbC == 0) cout << endl;
+        }
+    }
+
+    cout << endl;
+    cout << endl;
+    cout << endl;
 
     normalizedImg filtered = filter(IMG.nbFilters, IMG.nbL, IMG.nbC, norm);
+
+    for (int i = 0; i < IMG.nbL; i++){
+        for (int j = 0; j < IMG.nbC; j++){
+            cout << filtered[i][j] << " ";
+            if ((j + 1) % IMG.nbC == 0) cout << endl;
+        }
+    }
+
+    cout << endl;
+
+
+    cout << endl;
+
     return 0;
 }
 
@@ -139,6 +157,7 @@ ImageInput fileRead(){
         }
         if(input.thresholds[i] < input.thresholds[i-1]){
             error_threshold(input.thresholds[i]);
+            exit(0);
         }
     }
 
@@ -215,20 +234,21 @@ normalizedImg normalize(ImageInput rgb){
     return norm;
 }
 
-vector<int> getSortedNeighbors(normalizedImg norm, int l, int c){
-    vector<int> sortedNeighbors;
+// OK
+vector<int> getNeighbors(normalizedImg norm, int l, int c){
+    vector<int> neighbors;
 
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
-            if (abs(i) + abs(j) != 0) sortedNeighbors.push_back(norm[c + i][l + j]);
+            int y = c + j;
+            int x = l + i;
+            if (not(i == 0 && j == 0)) neighbors.push_back(norm[x][y]);
         }
     }
-
-    sort(sortedNeighbors.begin(), sortedNeighbors.end());
-
-    return sortedNeighbors;
+    return neighbors;
 }
 
+//OK
 void printRGB(ImageInput rgb){
     for (int i = 0; i < rgb.nbL; i++){
         for (int j = 0; j < rgb.nbC; j++){
@@ -241,21 +261,55 @@ void printRGB(ImageInput rgb){
     }
 }
 
+//OK
+//return pixel value based on neigbors rule
+int pixelVal(vector<int> neighbors){
+
+    sort(neighbors.begin(), neighbors.begin() + 8);
+
+    int max(0), count(1);
+
+    for (int i = 1; i < 8; i++) {
+        if (neighbors[i] == neighbors[i - 1]) {
+            count++;
+            if (count >= 6) return neighbors[i];
+        }
+        else {
+            if (max < count) max = count;
+            count = 1;
+        }
+    }
+    return 0;
+}
 
 normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm){
     normalizedImg filtered;
 
+    filtered.resize(nbL);
+    for (int i = 0; i < nbC; i++)
+        filtered[i].resize(nbC);
+
+    filtered = norm;
+
     for (int n = 1; n <= nbF; n++){
         for (int i = 1; i <= nbL-2; i++) {
             for (int j = 1; j <= nbC-2; j++){
-                vector<int> neighbors = getSortedNeighbors(norm, i, j); // O(n log(n))
+                vector<int> neighbors = getNeighbors(norm, i, j);
+                int x = pixelVal(neighbors); //COMPLEXITY ?
+                filtered[i][j] = x;
+            }
+        }
+        norm = filtered;
+    }
 
-                //FIND MOST FREQUENT
+    for (int i = 0; i < nbL; i++){
+        for (int j = 0; j < nbC; j++){
+            if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1){
+                filtered[i][j] = 0;
             }
         }
     }
 
     return filtered;
 
-    // BLACK EDGE !
 }
