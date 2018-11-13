@@ -78,8 +78,6 @@ int main()
     }
 
     cout << endl;
-
-
     cout << endl;
 
     return 0;
@@ -203,6 +201,7 @@ ImageInput fileRead(){
     return input;
 }
 
+//OK
 normalizedImg normalize(ImageInput rgb){
     normalizedImg norm;
 
@@ -282,6 +281,7 @@ int pixelVal(vector<int> neighbors){
     return 0;
 }
 
+//OK
 normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm){
     normalizedImg filtered;
 
