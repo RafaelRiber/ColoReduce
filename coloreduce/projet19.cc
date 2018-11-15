@@ -302,10 +302,13 @@ normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm){
         norm = filtered;
     }
 
-    for (int i = 0; i < nbL; i++){
-        for (int j = 0; j < nbC; j++){
-            if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1){
-                filtered[i][j] = 0;
+    // Bordure noire
+    if (nbF > 0) {
+        for (int i = 0; i < nbL; i++) {
+            for (int j = 0; j < nbC; j++) {
+                if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1) {
+                    filtered[i][j] = 0;
+                }
             }
         }
     }
