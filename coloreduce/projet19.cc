@@ -6,7 +6,6 @@
 #include <array>
 #include <cmath>
 #include <string>
-
 #include <algorithm>
 
 using namespace std;
@@ -41,50 +40,37 @@ void error_nb_filter(int nb_filter);
 
 ImageInput fileRead();
 normalizedImg normalize(ImageInput rgb);
-vector <int> getNeighbors(normalizedImg norm, int l, int c);
-normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm);
+
+vector<int> getNeighbors(normalizedImg norm, int l, int c);
+
+void filter(normalizedImg& norm, int nbF, int nbL, int nbC);
+
 int pixelVal(vector<int> neighbors);
+
 rgbImg render(normalizedImg filtered, int nbL, int nbC, vector<Pixel> reducedColors);
 
 void printRGB(rgbImg rgb, int nbL, int nbC);
 
 int main()
 {
-    ImageInput IMG = fileRead();
+    ImageInput image = fileRead();
 
-    normalizedImg norm = normalize(IMG);
+    normalizedImg norm = normalize(image);
 
+    filter(norm, image.nbFilters, image.nbL, image.nbC);
 
-    //PRINT NORM
-//    for (int i = 0; i < IMG.nbL; i++){
-//        for (int j = 0; j < IMG.nbC; j++){
+//    cout << endl;
+//
+//    for (int i = 0; i < image.nbL; i++){
+//        for (int j = 0; j < image.nbC; j++){
 //            cout << norm[i][j] << " ";
-//            if ((j + 1) % IMG.nbC == 0) cout << endl;
+//            if ((j + 1) % image.nbC == 0) cout << endl;
 //        }
 //    }
 
-    normalizedImg filtered = filter(IMG.nbFilters, IMG.nbL, IMG.nbC, norm);
+    rgbImg rendered = render(norm, image.nbL, image.nbC, image.reducedColors);
 
-//    cout << endl;
-//    cout << endl;
-//    cout << endl;
-//
-//    for (int i = 0; i < IMG.nbL; i++){
-//        for (int j = 0; j < IMG.nbC; j++){
-//            cout << filtered[i][j] << " ";
-//            if ((j + 1) % IMG.nbC == 0) cout << endl;
-//        }
-//    }
-//
-//    cout << endl;
-//    cout << endl;
-//    cout << "FILTERED:" << endl;
-
-    rgbImg rendered = render(filtered, IMG.nbL, IMG.nbC, IMG.reducedColors);
-
-    printRGB(rendered, IMG.nbL, IMG.nbC);
-
-
+    printRGB(rendered, image.nbL, image.nbC);
 
     return 0;
 }
@@ -272,7 +258,7 @@ void printRGB(rgbImg rgb, int nbL, int nbC){
 //return pixel value based on neigbors rule
 int pixelVal(vector<int> neighbors){
 
-    sort(neighbors.begin(), neighbors.begin() + 8);  //Complexity ??
+    sort(neighbors.begin(), neighbors.begin() + 8); //O(8 * log(8))
 
     int max(0), count(1);
 
@@ -289,18 +275,20 @@ int pixelVal(vector<int> neighbors){
     return 0;
 }
 
-normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm){
-    normalizedImg filtered;
+void filter(normalizedImg& filtered, int nbF, int nbL, int nbC){
 
-    filtered.resize(nbL);
-    for (int i = 0; i < nbC; i++)
-        filtered[i].resize(nbC);
-
-    for (int i = 0; i < nbL; i++){
-        for (int j = 0; j < nbC; j++){
-            filtered[i][j] = norm[i][j];
-        }
-    }
+//    normalizedImg copy = filtered;
+//
+//    for (int n = 1; n <= nbF; n++){
+//        for (int i = 1; i < nbL-1; i++) {
+//            for (int j = 1; j < nbC-1; j++){
+//                vector<int> neighbors = getNeighbors(filtered, i, j);
+//                int x = pixelVal(neighbors);
+//                copy[i][j] = x;
+//            }
+//        }
+//        copy = filtered;
+//    }
 
 //    Bordure noire
     if (nbF > 0) {
@@ -312,9 +300,6 @@ normalizedImg filter(int nbF, int nbL, int nbC, normalizedImg norm){
             }
         }
     }
-
-    return filtered;
-
 }
 
 rgbImg render(normalizedImg filtered, int nbL, int nbC, vector<Pixel> reducedColors){
