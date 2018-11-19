@@ -19,6 +19,7 @@ typedef struct {
 
 typedef vector<vector<int>> normalizedImg;
 typedef vector<vector<Pixel>>  rgbImg;
+typedef vector<int>            neighborList;
 
 //Décomposition du fichier d'entrée
 struct ImageInput{
@@ -39,13 +40,16 @@ void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
 ImageInput fileRead();
+
+void reducedInput(ImageInput& input);
+void inputThresholds(ImageInput& input);
+void inputPixels(ImageInput& input);
+
 normalizedImg normalize(ImageInput rgb);
 
-vector<int> getNeighbors(normalizedImg norm, int l, int c);
-
-void filter(normalizedImg& norm, int nbF, int nbL, int nbC);
-
-int pixelVal(vector<int> neighbors);
+void getNeighbors(neighborList& n, normalizedImg norm, int l, int c);
+int pixelVal(neighborList neighbors, int nbR);
+void filter(normalizedImg& filtered, int nbF, int nbL, int nbC, int nbR);
 
 rgbImg render(normalizedImg filtered, int nbL, int nbC, vector<Pixel> reducedColors);
 
@@ -57,16 +61,25 @@ int main()
 
     normalizedImg norm = normalize(image);
 
-    filter(norm, image.nbFilters, image.nbL, image.nbC);
-
 //    cout << endl;
-//
 //    for (int i = 0; i < image.nbL; i++){
 //        for (int j = 0; j < image.nbC; j++){
 //            cout << norm[i][j] << " ";
 //            if ((j + 1) % image.nbC == 0) cout << endl;
 //        }
 //    }
+//    cout << endl;
+
+    filter(norm, image.nbFilters,image.nbL, image.nbC, image.nbR);
+
+//    cout << endl;
+//    for (int i = 0; i < image.nbL; i++){
+//        for (int j = 0; j < image.nbC; j++){
+//            cout << norm[i][j] << " ";
+//            if ((j + 1) % image.nbC == 0) cout << endl;
+//        }
+//    }
+//    cout << endl;
 
     rgbImg rendered = render(norm, image.nbL, image.nbC, image.reducedColors);
 
@@ -105,12 +118,32 @@ ImageInput fileRead(){
         exit(0);
     }
 
+    reducedInput(input);
+    inputThresholds(input);
+
+    cin >> input.nbFilters;
+    if (input.nbFilters < 0) {
+        error_nb_filter(input.nbFilters);
+        exit(0);
+    }
+
+    string header;
+    cin >> header;
+    cin >> input.nbC;
+    cin >> input.nbL;
+    cin >> input.max;
+
+    // Pixels de l'image d'entrée
+    inputPixels(input);
+    return input;
+}
+
+void reducedInput(ImageInput& input){
     input.reducedColors.resize(input.nbR + 1);
     input.reducedColors[0].r = 0;
     input.reducedColors[0].g = 0;
     input.reducedColors[0].b = 0;
 
-    //valeur des couleurs réduites
     for (int i = 1; i <= input.nbR; i++){
 
         cin >> input.reducedColors[i].r;
@@ -130,11 +163,9 @@ ImageInput fileRead(){
             exit(0);
         }
     }
+}
 
-    //  Entrée des nbR - 1 seuils
-    //  Calcule l'écart entre le i-ème seuil et le précédent, et vérifie que celui-ci
-    //  soit supérieur à la constante epsilon, afin d'éviter deux seuls identiques
-
+void inputThresholds(ImageInput& input){
     input.thresholds.resize(input.nbR + 1);
     input.thresholds[0] = 0;
 
@@ -152,23 +183,13 @@ ImageInput fileRead(){
     }
 
     input.thresholds[input.nbR] = 1.0;
+}
 
-    cin >> input.nbFilters;
-    if (input.nbFilters < 0) {
-        error_nb_filter(input.nbFilters);
-        exit(0);
-    }
-
-    cin >> input.header;
-    cin >> input.nbC;
-    cin >> input.nbL;
-    cin >> input.max;
-
+void inputPixels(ImageInput& input){
     input.inputImg.resize(input.nbL);
     for (int i = 0; i < input.nbC; i++)
         input.inputImg[i].resize(input.nbC);
 
-    // Pixels de l'image d'entrée
     for (int i = 0; i < input.nbL; i++){
         for (int j = 0; j < input.nbC; j++){
 
@@ -190,10 +211,8 @@ ImageInput fileRead(){
             }
         }
     }
-    return input;
 }
 
-//OK
 normalizedImg normalize(ImageInput rgb){
     normalizedImg norm;
 
@@ -225,40 +244,23 @@ normalizedImg normalize(ImageInput rgb){
     return norm;
 }
 
-// OK
-vector<int> getNeighbors(normalizedImg norm, int l, int c){
-    vector<int> neighbors;
-
+void getNeighbors(neighborList& n, normalizedImg norm, int l, int c){
+    int iter = 0;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             int y = c + j;
             int x = l + i;
-            if (not(i == 0 && j == 0)) neighbors.push_back(norm[x][y]);
-        }
-    }
-    return neighbors;
-}
-
-//OK
-void printRGB(rgbImg rgb, int nbL, int nbC){
-    cout << "P3" << endl;
-    cout << nbC << " " << nbL << endl;
-    cout << maxVal << endl;
-    for (int i = 0; i < nbL; i++){
-        for (int j = 0; j < nbC; j++){
-            cout << rgb[i][j].r << " ";
-            cout << rgb[i][j].g << " ";
-            cout << rgb[i][j].b << " ";
-            if ((j + 1) % nbC == 0) cout << endl;
+            if (not(i == 0 && j == 0)){
+                n[iter] = norm[x][y];
+                iter++;
+            }
         }
     }
 }
 
-//OK
 //return pixel value based on neigbors rule
-int pixelVal(vector<int> neighbors){
-
-    sort(neighbors.begin(), neighbors.begin() + 8); //O(8 * log(8))
+int pixelVal(neighborList neighbors, int nbR){
+    sort(neighbors.begin(), neighbors.begin() + 8); // Linéaire car taille toujours 8
 
     int max(0), count(1);
 
@@ -275,30 +277,55 @@ int pixelVal(vector<int> neighbors){
     return 0;
 }
 
-void filter(normalizedImg& filtered, int nbF, int nbL, int nbC){
 
-//    normalizedImg copy = filtered;
-//
-//    for (int n = 1; n <= nbF; n++){
-//        for (int i = 1; i < nbL-1; i++) {
-//            for (int j = 1; j < nbC-1; j++){
-//                vector<int> neighbors = getNeighbors(filtered, i, j);
-//                int x = pixelVal(neighbors);
-//                copy[i][j] = x;
-//            }
-//        }
-//        copy = filtered;
-//    }
+void filter(normalizedImg& filtered, int nbF, int nbL, int nbC, int nbR) {
+
+    normalizedImg copy = filtered;
+    neighborList neighbors(8);
+
+
+    for (int n = 1; n <= nbF; n++){
+        for (int i = 1; i < nbL-1; i++) {
+            for (int j = 1; j < nbC-1; j++){
+
+                getNeighbors(neighbors, filtered, i, j);  //SUPER LONG ?!?!?!?!?!
+
+                int x = pixelVal(neighbors, nbR);
+                //int x = 0;
+
+                //cout << i << " " << j << endl;
+
+                copy[i][j] = x;
+            }
+        }
+        filtered = copy;
+    }
 
 //    Bordure noire
     if (nbF > 0) {
         for (int i = 0; i < nbL; i++) {
             for (int j = 0; j < nbC; j++) {
                 if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1) {
-                    filtered[i][j] = 0;
+                    copy[i][j] = 0;
                 }
             }
         }
+    }
+
+    filtered = copy;
+}
+
+void printRGB(rgbImg rgb, int nbL, int nbC){
+    cout << "P3" << endl;
+    cout << nbC << " " << nbL << endl;
+    cout << maxVal << endl;
+    for (int i = 0; i < nbL; i++){
+        for (int j = 0; j < nbC; j++){
+            cout << rgb[i][j].r << " ";
+            cout << rgb[i][j].g << " ";
+            cout << rgb[i][j].b << " ";
+        }
+        cout << endl;
     }
 }
 
@@ -319,6 +346,5 @@ rgbImg render(normalizedImg filtered, int nbL, int nbC, vector<Pixel> reducedCol
             rendered[i][j].b = reducedColors[pixelVal].b;
         }
     }
-
     return rendered;
 }
