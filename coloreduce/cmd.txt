@@ -1,0 +1,1 @@
+g++ -Wall -Wextra -std=c++11 -O3 -fvisibility=hidden -fvisibility-inlines-hidden -o projet projet19.cc

@@ -13,12 +13,16 @@
   <component name="ChangeListManager">
     <list default="true" id="d1837985-f85b-4a20-8cd8-f07ceaae69d3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/projet19.cc.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/projet19.cc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiled/test1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/projet19.dir/projet19.cc.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/projet19" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/projet19" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projet19.cc" beforeDir="false" afterPath="$PROJECT_DIR$/projet19.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/advanced/flag copie.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/advanced/flag.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/advanced/flag.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/elementary/test2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/elementary/test2.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,64 +31,81 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FUSProjectUsageTrigger">
     <session id="308489132">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="26" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.5" value="2" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.open.time.12" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.5" value="4" />
+          <entry key="project.open.time.6" value="6" />
+          <entry key="project.open.time.7" value="4" />
+          <entry key="project.open.time.8" value="7" />
+          <entry key="project.open.time.9" value="3" />
+          <entry key="project.opened" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="cc" value="3" />
-          <entry key="new" value="1" />
-          <entry key="txt" value="16" />
-          <entry key="vector" value="1" />
+          <entry key="cc" value="5" />
+          <entry key="memory" value="10" />
+          <entry key="new" value="2" />
+          <entry key="txt" value="69" />
+          <entry key="vector" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CMakeCache.txt" value="1" />
-          <entry key="CMakeLists.txt" value="2" />
-          <entry key="ObjectiveC" value="5" />
-          <entry key="PLAIN_TEXT" value="13" />
+          <entry key="CMakeCache.txt" value="2" />
+          <entry key="CMakeLists.txt" value="3" />
+          <entry key="ObjectiveC" value="28" />
+          <entry key="PLAIN_TEXT" value="64" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cc" value="4743" />
-          <entry key="txt" value="287" />
+          <entry key="cc" value="18503" />
+          <entry key="mm" value="12" />
+          <entry key="txt" value="625" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CMakeLists.txt" value="242" />
-          <entry key="ObjectiveC" value="4743" />
-          <entry key="PLAIN_TEXT" value="45" />
+          <entry key="CMakeLists.txt" value="248" />
+          <entry key="Doxygen file" value="2" />
+          <entry key="ObjectiveC" value="18513" />
+          <entry key="PLAIN_TEXT" value="377" />
         </counts>
       </usages-collector>
     </session>
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="ColoReduce" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/compiled/test1.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="29" selection-end-line="9" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/projet19.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="546">
-              <caret line="50" column="21" selection-start-line="50" selection-start-column="21" selection-end-line="50" selection-end-column="21" />
+            <state relative-caret-position="249">
+              <caret line="287" column="19" selection-start-line="287" selection-start-column="19" selection-end-line="287" selection-end-column="19" />
               <folding>
                 <element signature="e#46#65#0" expanded="true" />
               </folding>
@@ -93,26 +114,64 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/advanced/tree.txt">
+        <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/memory">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="27" column="28" lean-forward="true" selection-end-line="116369" />
+            <state relative-caret-position="177">
+              <caret line="1105" selection-start-line="1105" selection-end-line="1105" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt">
+        <entry file="file://$PROJECT_DIR$/compiled/testSquareFalse.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-12" />
+            <state relative-caret-position="38">
+              <caret line="2" column="1" selection-end-line="10" selection-end-column="42" />
+            </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+        <entry file="file://$PROJECT_DIR$/compiled/testSquareTrue.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="10" column="25" lean-forward="true" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/advanced/home.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="22" column="61" selection-start-line="22" selection-start-column="61" selection-end-line="22" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/elementary/test2.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="171">
+              <caret line="9" column="43" selection-end-line="10" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/advanced/flag.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="76">
-              <caret line="4" column="31" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
+              <caret line="4" column="1" selection-end-line="13621" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/elementary/asdf.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
@@ -121,8 +180,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+      <find>130 60 11</find>
+      <find>size()</find>
+      <find>nBr</find>
+      <find>error_nbR</find>
       <find>resize</find>
-      <find>101</find>
+      <find>size</find>
+      <find>.size()</find>
+      <find>error_</find>
+      <find>error_t</find>
+      <find>sorted</find>
+      <find>puxel</find>
+      <find>render</find>
+      <find>getNeighbors</find>
+      <find>IMG</find>
+      <find>filter</find>
+      <find>255</find>
+      <find>PUTE</find>
+      <find>pixelVal</find>
+      <find>//OK</find>
+      <find>sort</find>
+      <find>header</find>
+      <find>%</find>
+      <find>renderne</find>
+      <find>int i = 1</find>
+      <find>OK</find>
+      <find>vector&lt;int</find>
+      <find>cout</find>
+      <find>cout &lt;&lt; i</find>
+      <find>reduced</find>
+      <find>norm</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -131,10 +218,20 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/compiled/test1.txt" />
         <option value="$PROJECT_DIR$/compiled/projet19.cc" />
+        <option value="$PROJECT_DIR$/compiled/test1.txt" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/compiled/testSquare.txt" />
+        <option value="$PROJECT_DIR$/tests/advanced/tree.txt" />
+        <option value="$PROJECT_DIR$/tests/elementary/test1.txt" />
+        <option value="$PROJECT_DIR$/compiled/testSquareTrue.txt" />
+        <option value="$PROJECT_DIR$/tests/advanced/thick_edge.txt" />
+        <option value="$PROJECT_DIR$/tests/elementary/asdf.txt" />
+        <option value="$PROJECT_DIR$/tests/advanced/s.txt" />
+        <option value="$PROJECT_DIR$/tests/advanced/home.txt" />
         <option value="$PROJECT_DIR$/tests/advanced/flag.txt" />
+        <option value="$PROJECT_DIR$/compiled/testSquareFalse.txt" />
+        <option value="$PROJECT_DIR$/tests/elementary/test2.txt" />
         <option value="$PROJECT_DIR$/projet19.cc" />
       </list>
     </option>
@@ -145,10 +242,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
     <option name="width" value="2560" />
-    <option name="height" value="1357" />
+    <option name="height" value="1353" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -156,10 +254,16 @@
         <expanded-state>
           <State />
           <State>
+            <id>C/C++</id>
+          </State>
+          <State>
             <id>CSS</id>
           </State>
           <State>
             <id>Code style issuesJavaScript</id>
+          </State>
+          <State>
+            <id>Data flow analysisC/C++</id>
           </State>
           <State>
             <id>General</id>
@@ -179,7 +283,7 @@
         </expanded-state>
         <selected-state>
           <State>
-            <id>LongLine</id>
+            <id>OCDFAInspection</id>
           </State>
         </selected-state>
       </profile-state>
@@ -237,7 +341,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -266,6 +370,9 @@
       </method>
     </configuration>
   </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",INHERITORS_AND_CATEGORIES" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -279,11 +386,35 @@
       <workItem from="1541613564145" duration="270000" />
       <workItem from="1541613850967" duration="5105000" />
       <workItem from="1541619476159" duration="12586000" />
+      <workItem from="1541632497932" duration="17000" />
+      <workItem from="1541632538842" duration="13000" />
+      <workItem from="1541703557212" duration="2834000" />
+      <workItem from="1541706919145" duration="4298000" />
+      <workItem from="1541711676159" duration="1065000" />
+      <workItem from="1541746514453" duration="47000" />
+      <workItem from="1541746605974" duration="1744000" />
+      <workItem from="1541765692766" duration="5396000" />
+      <workItem from="1541842388070" duration="4007000" />
+      <workItem from="1541861154155" duration="207000" />
+      <workItem from="1541969006937" duration="504000" />
+      <workItem from="1542054019383" duration="4064000" />
+      <workItem from="1542137778826" duration="4752000" />
+      <workItem from="1542142587712" duration="709000" />
+      <workItem from="1542309473856" duration="7570000" />
+      <workItem from="1542350843479" duration="129000" />
+      <workItem from="1542351036869" duration="21000" />
+      <workItem from="1542374052235" duration="28000" />
+      <workItem from="1542378818378" duration="4270000" />
+      <workItem from="1542401730893" duration="2761000" />
+      <workItem from="1542564031921" duration="3934000" />
+      <workItem from="1542647829168" duration="11906000" />
+      <workItem from="1542745770628" duration="2185000" />
+      <workItem from="1542831605940" duration="4724000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17961000" />
+    <option name="totallyTimeSpent" value="85146000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -295,29 +426,52 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="2560" height="1357" extended-state="6" />
+    <frame x="0" y="23" width="2560" height="1353" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49882075" visible="true" weight="0.20571883" />
-      <window_info id="Structure" order="1" sideWeight="0.5011792" side_tool="true" weight="0.20413026" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4883227" visible="true" weight="0.07783955" />
+      <window_info id="Structure" order="1" sideWeight="0.51167727" side_tool="true" weight="0.09155937" />
+      <window_info id="Favorites" order="2" sideWeight="0.51167727" side_tool="true" weight="0.09155937" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32964426" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32964426" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.2513834" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32939324" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49928468" weight="0.36875495" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.517843" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3291039" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.36796194" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5007153" side_tool="true" weight="0.3694779" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.35368755" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.3291039" />
+      <window_info anchor="bottom" id="CMake" order="12" weight="0.32831088" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32962668" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4883227" visible="true" weight="0.09155937" />
+      <window_info id="Structure" order="1" sideWeight="0.51167727" side_tool="true" visible="true" weight="0.09155937" />
+      <window_info id="Favorites" order="2" sideWeight="0.51167727" side_tool="true" weight="0.09155937" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32939324" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49928468" visible="true" weight="0.3694779" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.5180723" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32964426" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.32964426" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32964426" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.31860778" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5007153" side_tool="true" weight="0.3694779" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.3239625" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32964426" />
-      <window_info anchor="bottom" id="CMake" order="12" weight="0.32964426" />
+      <window_info anchor="bottom" id="CMake" order="12" weight="0.328877" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
-    </layout>
+      <window_info anchor="right" id="Database" order="3" weight="0.3297568" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -329,37 +483,36 @@
     <entry file="file://$PROJECT_DIR$/FileRead.cc">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/elementary/test1.txt">
+    <entry file="file://$PROJECT_DIR$/compiled/home.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+        <state relative-caret-position="418">
+          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/new">
+    <entry file="file://$PROJECT_DIR$/tests/advanced/flag copie.txt" />
+    <entry file="file://$PROJECT_DIR$/tests/advanced/unchanged.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="227" selection-start-line="227" selection-end-line="227" />
-          <folding>
-            <element signature="e#9780#9818#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-257440">
+          <caret line="19" column="25" selection-end-line="13611" />
         </state>
       </provider>
     </entry>
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/vector">
+    <entry file="file://$PROJECT_DIR$/out.txt" />
+    <entry file="file://$PROJECT_DIR$/proto.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="1503" selection-start-line="1503" selection-end-line="1503" />
+        <state relative-caret-position="304">
+          <caret line="16" selection-start-line="16" selection-end-line="34" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/projet19.cc">
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/elementary/E01.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="30" column="16" lean-forward="true" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
-          <folding>
-            <element signature="e#46#65#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="95">
+          <caret line="5" column="9" lean-forward="true" selection-end-line="6" />
         </state>
       </provider>
     </entry>
@@ -370,74 +523,119 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-12" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
-          <caret line="4" column="31" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
+          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/compiled/test1.txt">
+    <entry file="file://$PROJECT_DIR$/compiled/testSquare.txt" />
+    <entry file="file://$PROJECT_DIR$/tests/elementary/E03.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="29" selection-end-line="9" selection-end-column="35" />
+        <state relative-caret-position="57">
+          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/elementary/E04.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/vector">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="412" selection-start-line="412" selection-end-line="412" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/advanced/thick_edge.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/new">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="235" selection-start-line="235" selection-end-line="235" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/advanced/s.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/elementary/test1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/advanced/tree.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="13" column="72" lean-forward="true" selection-start-line="13" selection-start-column="72" selection-end-line="13" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/elementary/asdf.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/advanced/home.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="22" column="61" selection-start-line="22" selection-start-column="61" selection-end-line="22" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/memory">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="1105" selection-start-line="1105" selection-end-line="1105" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/compiled/testSquareFalse.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="1" selection-end-line="10" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/elementary/test2.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" lean-forward="true" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/compiled/home.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+        <state relative-caret-position="171">
+          <caret line="9" column="43" selection-end-line="10" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/advanced/flag.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
-          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+          <caret line="4" column="1" selection-end-line="13621" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/advanced/flag copie.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/advanced/thick_edge.txt">
+    <entry file="file://$PROJECT_DIR$/compiled/testSquareTrue.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="4" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/advanced/unchanged.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="25" selection-end-line="13611" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/advanced/tree.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="27" column="28" lean-forward="true" selection-end-line="116369" />
+        <state relative-caret-position="190">
+          <caret line="10" column="25" lean-forward="true" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/projet19.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="50" column="21" selection-start-line="50" selection-start-column="21" selection-end-line="50" selection-end-column="21" />
+        <state relative-caret-position="249">
+          <caret line="287" column="19" selection-start-line="287" selection-start-column="19" selection-end-line="287" selection-end-column="19" />
           <folding>
             <element signature="e#46#65#0" expanded="true" />
           </folding>
