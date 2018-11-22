@@ -46,9 +46,6 @@ void inputPixels(ImageInput& input);
 
 normalizedImg normalize(ImageInput rgb);
 
-//void getNeighbors(neighborList& n, normalizedImg norm, int l, int c);
-//int pixelVal(neighborList neighbors, int nbR);
-
 void filter(normalizedImg& norm, int nbF, int nbL, int nbC, int nbR);
 int getPixelValue(int x, int y, int nbR, normalizedImg& copy);
 rgbImg render(normalizedImg filtered, int nbL, int nbC, redCol rColors);
@@ -59,25 +56,7 @@ int main()
     ImageInput image = fileRead();
     normalizedImg norm = normalize(image);
 
-//    cout << endl;
-//    for (int i = 0; i < image.nbL; i++){
-//        for (int j = 0; j < image.nbC; j++){
-//            cout << norm[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
-//    cout << endl;
-
     filter(norm, image.nbFilters, image.nbL, image.nbC, image.nbR);
-
-//    cout << endl;
-//    for (int i = 0; i < image.nbL; i++){
-//        for (int j = 0; j < image.nbC; j++){
-//            cout << norm[i][j] << " ";
-//        }
-//        cout << endl;
-//    }
-//    cout << endl;
 
     rgbImg rendered = render(norm, image.nbL, image.nbC, image.rColors);
     printRGB(rendered, image.nbL, image.nbC);
@@ -240,38 +219,6 @@ normalizedImg normalize(ImageInput rgb){
     }
     return norm;
 }
-
-//void getNeighbors(neighborList& n, normalizedImg norm, int l, int c){
-//    int iter = 0;
-//    for (int i = -1; i <= 1; i++) {
-//        for (int j = -1; j <= 1; j++) {
-//            if (not(i == 0 && j == 0)){
-//                n[iter] = norm[l + i][l + j];
-//                iter++;
-//            }
-//        }
-//    }
-//}
-
-//return pixel value based on neigbors rule
-//int pixelVal(neighborList neighbors, int nbR){
-//    sort(neighbors.begin(), neighbors.begin() + 8); // Linéaire car taille toujours 8
-//
-//    int max(0), count(1);
-//
-//    for (int i = 1; i < 8; i++) {
-//        if (neighbors[i] == neighbors[i - 1]) {
-//            count++;
-//            if (count >= 6) return neighbors[i];
-//        }
-//        else {
-//            if (max < count) max = count;
-//            count = 1;
-//        }
-//    }
-//    return 0;
-//}
-
 
 void filter(normalizedImg& norm, int nbF, int nbL, int nbC, int nbR) {
 
