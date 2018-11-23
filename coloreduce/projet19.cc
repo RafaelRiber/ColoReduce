@@ -1,16 +1,18 @@
-/** \author Rafael Riber
-*  \date	dec 2018
+/* ICC Pratique
+ * Mini-Projet  - ColoReduce
+ *
+ * Date:   Décembre 2018
+ * Auteur: Rafael Riber
 */
+
 #include <iostream>
 #include <vector>
-#include <array>
 #include <cmath>
 #include <string>
-
 using namespace std;
 
-const int maxVal = 255;
-const double epsilon = 0.001;
+const int maxVal(255);
+const double epsilon(0.001);
 
 typedef struct {
     int r, g, b;
@@ -54,12 +56,12 @@ void printRGB(rgbImg rgb, int nbL, int nbC);
 
 int main()
 {
-    ImageInput image = fileRead();
-    normalizedImg norm = normalize(image);
+    ImageInput image(fileRead());
+    normalizedImg norm(normalize(image));
 
     filter(norm, image.nbFilters, image.nbL, image.nbC, image.nbR);
 
-    rgbImg rendered = render(norm, image.nbL, image.nbC, image.rColors);
+    rgbImg rendered(render(norm, image.nbL, image.nbC, image.rColors));
     printRGB(rendered, image.nbL, image.nbC);
 
     return 0;
