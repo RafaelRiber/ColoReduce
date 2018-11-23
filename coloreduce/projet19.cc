@@ -20,16 +20,17 @@ typedef vector<vector<int>> normalizedImg;
 typedef vector<vector<Pixel>>  rgbImg;
 
 typedef vector<Pixel> redCol;
+typedef vector<int> counter;
+
 //Décomposition du fichier d'entrée
 struct ImageInput{
     int nbR;
-    redCol rColors;
-    vector<double> thresholds;
     int nbFilters;
-    string header;
     int nbC;
     int nbL;
     int max;
+    redCol rColors;
+    vector<double> thresholds;
     rgbImg inputImg;
 };
 
@@ -162,9 +163,9 @@ void inputThresholds(ImageInput& input){
 }
 
 void inputPixels(ImageInput& input){
-    input.inputImg.resize(input.nbL);
-    for (int i = 0; i < input.nbC; i++)
-        input.inputImg[i].resize(input.nbC);
+
+    rgbImg inputImg = vector<vector<Pixel>> (input.nbL,vector<Pixel>(input.nbC));
+    input.inputImg = inputImg;
 
     for (int i = 0; i < input.nbL; i++){
         for (int j = 0; j < input.nbC; j++){
@@ -190,14 +191,10 @@ void inputPixels(ImageInput& input){
 }
 
 normalizedImg normalize(ImageInput rgb){
-    normalizedImg norm;
 
-    int nbR = rgb.nbR;
+    normalizedImg norm = vector<vector<int>> (rgb.nbL,vector<int>(rgb.nbC));
 
-    norm.resize(rgb.nbL);
-    for (int i = 0; i < rgb.nbC; i++)
-        norm[i].resize(rgb.nbC);
-
+    int nbR(rgb.nbR);
 
     for (int i = 0; i < rgb.nbL; i++){
         for (int j = 0; j < rgb.nbC; j++){
@@ -249,7 +246,7 @@ void filter(normalizedImg& norm, int nbF, int nbL, int nbC, int nbR) {
 
 int getPixelValue(int x, int y, int nbR, normalizedImg& copy){
 
-    vector<int> count(nbR + 1);
+    counter count(nbR + 1);
     int current(0);
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -289,9 +286,8 @@ void printRGB(rgbImg rgb, int nbL, int nbC){
 rgbImg render(normalizedImg filtered, int nbL, int nbC, redCol rColors){
     rgbImg rendered;
 
-    rendered.resize(nbL);
-    for (int i = 0; i < nbC; i++)
-        rendered[i].resize(nbC);
+    rgbImg inputImg = vector<vector<Pixel>> (nbL,vector<Pixel>(nbC));
+    rendered = inputImg;
 
     for (int i = 0; i < nbL; i++){
         for (int j = 0; j < nbC; j++){
