@@ -60,6 +60,8 @@ int getPixelValue(int x, int y, int nbR, normImg& copy);
 rgbImg render(normImg filtered, int nbL, int nbC, redCol rColors);
 void printRGB(rgbImg rgb, int nbL, int nbC);
 
+void blackEdge(normImg &norm, int nbF, int nbL, int nbC);
+
 int main()
 {
     InputImg image(fileRead());
@@ -259,6 +261,10 @@ void filter(normImg& norm, int nbF, int nbL, int nbC, int nbR) {
     }
 
 //  Bordure noire
+    blackEdge(norm, nbF, nbL, nbC);
+}
+
+void blackEdge(normImg &norm, int nbF, int nbL, int nbC) {
     if (nbF > 0) {
         for (int i(0); i < nbL; i++) {
             for (int j(0); j < nbC; j++) {
@@ -277,13 +283,10 @@ int getPixelValue(int x, int y, int nbR, normImg& copy){
     for (int i(-1); i <= 1; i++) {
         for (int j(-1); j <= 1; j++) {
             if (i != 0 or j != 0) {
-
                 current = copy[x + i][y + j];
-
                 for (int c(0); c <= nbR; c++) {
                     if (c == current) {
                         count[c] = count[c] + 1;
-
                         if (count[c] >= 6) {
                             return c;
                         }
