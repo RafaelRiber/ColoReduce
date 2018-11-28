@@ -4,9 +4,10 @@
 \usepackage[linesnumbered,ruled,french, onelanguage]{algorithm2e}
 \RestyleAlgo{boxruled}
 \usepackage{amsmath}
+\usepackage[makeroom]{cancel}
 
-\SetKwIF{Si}{SinonSi}{Sinon}{Si}{}{Sinon si}{}{fin}
-\SetKwFor{Pour}{Pour}{}{fin}
+\SetKwIF{Si}{SinonSi}{sinon}{Si}{}{Sinon si}{}{}
+\SetKwFor{Pour}{Pour}{}{}
 
 \begin{document}
 \noindent
@@ -21,10 +22,10 @@
 
 \begin{algorithm}[H]
 \SetSideCommentLeft
-    \KwIn{Image normalisée N, de taille $C \times L$, nombre de filtres à appliquer $f$, nombre de couleurs réduites $r$ de l'image}
+    \KwIn{Image normalisée $N$ de taille $C \times L$, nombre de filtres à appliquer $f$, nombre de couleurs réduites de l'image $r$.}
     \KwResult{Image filtrée $f$ fois}
     %\underline{Filtrage}$(N,x,y,f,r)$\
-    $copy \gets N$\\
+    $copie \gets N$\\
     $val \gets 0$\\
     $count$ est une liste de longueur fixe $r$.
     
@@ -41,32 +42,56 @@
    				  	  {
    				  	  	\Si{$i \neq 0$ \upshape{ou} $j \neq 0$}
    				  	  	  {
-   				  	  	    current $\gets$ copy[$x + i$][$y + j$]\\
+   				  	  	    $current \gets copy$[$x + i$][$y + j$]\\
    				  	  	  	\Pour{$c$ \upshape{de} $0$ \upshape{à} $r$}
    				  	  	  	  {
    				  	  	  	  	\Si {$c = current$}
    				  	  	  	  		{
-   				  	  	  	  			$count$[c] = count[c] + 1\\
-   				  	  	  	  			\Si {$count$[c] $\geq 6$}
+   				  	  	  	  			$count$[$c$] = $count$[$c$]$ + 1$\\
+   				  	  	  	  			\Si {$count$\upshape{[$c$]} $\geq 6$}
    				  	  	  	  			  {
+   				  	  	  	  			    $val \gets c$
    				  	  	  	  			  }
+   				  	  	  	  			\Sinon{$val \gets 0$}
    				  	  	  	  		}
    				  	  	  	  }
    				  	  	  }
    				  	  }
    				  }
-             $norm$[$x$][$y$] $\gets val$
+   			 
+             $N$[$x$][$y$] $\gets val$
       	    }
       	  }
-      	  copy $\gets$ norm
+      	  $copie \gets N$
         }
-      {
-      }
-      
+        \Si{$f > 0$} 
+          {
+        	\Pour{$i$ \upshape{de} $0$ \upshape{à} $L$} 
+        	{
+        	  \Pour{$j$ \upshape{de} $0$ \upshape{à} $C$}
+        	  {
+                \Si{$i = 0$ \upshape{ou} $j = 0$ \upshape{ou} $i = L - 1$ \upshape{ou} $j = nbC - 1$}
+                  {
+                    $N$[$i$][$j$] $\gets 0$
+                  }
+              }
+            }
+        }
 \caption{ \textsc{Filtrage}}
 \end{algorithm}
 
 \section*{Analyse de complexité}
-$\mathcal{O}((f \cdot (C-2) \cdot (L-2)) + ((2L + 2C)))$
+Dans le pire des cas, on parcourt tous les pixels n'étant pas en bordure de l'image (de dimensions $c\cdot l$) $f$ fois, puis les pixels de bordure une seule fois.\\
+
+On a donc $N_i = (c - 2)(l-2)$ pixels à filtrer $f$ fois, et $N_b = (2c + 2(l-2))$ pixels en bordure, ce qui donne:
+\begin{align}
+N_{pixels} &= f \cdot N_i + N_b \nonumber \\
+ &= (fcl-2fc-2fl+4f) + 2c+2l-4\nonumber \\
+&= flc - 2fc - 2fl + 4f + 2c \nonumber \\
+&= flc - f \cdot \bigg(2c + 2l - 4 - \frac{2c}{f}\bigg) \leq fcl \nonumber \\
+N_{pixels} &\leq fcl \nonumber
+\end{align}
+
+On a ainsi une complexité de $\mathcal{O}(N_{pixels}) \leq \mathcal{O}(f\cdot c\cdot l)$, et donc une complexité de type linéaire $\mathcal{O}(n)$.
 
 \end{document}
