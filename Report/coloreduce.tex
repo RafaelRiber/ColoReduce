@@ -70,7 +70,7 @@
         	{
         	  \Pour{$j$ \upshape{de} $0$ \upshape{à} $C$}
         	  {
-                \Si{$i = 0$ \upshape{ou} $j = 0$ \upshape{ou} $i = L - 1$ \upshape{ou} $j = nbC - 1$}
+                \Si{$i = 0$ \upshape{ou} $j = 0$ \upshape{ou} $i = L - 1$ \upshape{ou} $j = C - 1$}
                   {
                     $N$[$i$][$j$] $\gets 0$
                   }
@@ -88,10 +88,10 @@ On a donc $N_i = (c - 2)(l-2)$ pixels à filtrer $f$ fois, et $N_b = (2c + 2(l-2
 N_{pixels} &= f \cdot N_i + N_b \nonumber \\
  &= (fcl-2fc-2fl+4f) + 2c+2l-4\nonumber \\
 &= flc - 2fc - 2fl + 4f + 2c \nonumber \\
-&= flc - f \cdot \bigg(2c + 2l - 4 - \frac{2c}{f}\bigg) \leq fcl \nonumber \\
-N_{pixels} &\leq fcl \nonumber
+&= flc - f \cdot \bigg(2c + 2l - 4 - \frac{2c}{f}\bigg) \leq flc \nonumber \\
+N_{pixels} &\leq flc \nonumber
 \end{align}
 
-On a ainsi une complexité de $\mathcal{O}(N_{pixels}) \leq \mathcal{O}(f\cdot c\cdot l)$, et donc une complexité de type linéaire $\mathcal{O}(n)$.
+On a ainsi une complexité de $\mathcal{O}(N_{pixels}) \leq \mathcal{O}(f\cdot l\cdot c)$, et donc une complexité de type linéaire $\mathcal{O}(n)$.
 
 \end{document}
