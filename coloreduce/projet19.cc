@@ -19,7 +19,7 @@ struct Pixel;
 
 typedef vector<vector<int>>   normImg;
 typedef vector<vector<Pixel>> rgbImg;
-typedef vector<Pixel>         redCol;
+typedef vector<Pixel>         reducedColors;
 typedef vector<double>        thresholdList;
 typedef vector<int>           counter;
 
@@ -29,11 +29,11 @@ struct Pixel{
 
 //Décomposition du fichier d'entrée
 struct InputImg{
-    int nbR; // Nombre de couleurs réduites
-    int nbF; // Nombre de filtrages
-    unsigned int nbC; // Nombre de pixels horizontaux
-    unsigned int nbL; // Nombre de pixels verticaux
-    redCol rColors;           // Liste des couleurs réduites
+    int nbR;                  // Nombre de couleurs réduites
+    int nbF;                  // Nombre de filtrages
+    unsigned int nbC;         // Nombre de pixels horizontaux
+    unsigned int nbL;         // Nombre de pixels verticaux
+    reducedColors rColors;    // Liste des couleurs réduites
     thresholdList thresholds; // Liste des seuils
     rgbImg inputImg;          // Pixels de l'image d'entrée
 };
@@ -46,7 +46,7 @@ void error_nb_filter(int nb_filter);
 
 // Fonctions de lecture
 InputImg fileRead();
-void inputReduced(InputImg &input);
+void inputReduced(InputImg& input);
 void inputThresholds(InputImg& input);
 void inputFilters(InputImg& input);
 void inputDimensions(InputImg& input);
@@ -59,7 +59,7 @@ int getPixelValue(int x, int y, int nbR, normImg& copy);
 void blackEdge(normImg &norm, int nbF, int nbL, int nbC);
 
 // Fonction de rendu
-rgbImg render(normImg filtered, int nbL, int nbC, redCol rColors);
+rgbImg render(normImg filtered, int nbL, int nbC, reducedColors rColors);
 void printRGB(rgbImg rgb, int nbL, int nbC);
 
 int main()
@@ -313,7 +313,7 @@ int getPixelValue(int x, int y, int nbR, normImg& copy){
     return 0;
 }
 
-rgbImg render(normImg filtered, int nbL, int nbC, redCol rColors){
+rgbImg render(normImg filtered, int nbL, int nbC, reducedColors rColors){
     rgbImg rendered;
 
     rgbImg inputImg(nbL,vector<Pixel>(nbC));
@@ -324,9 +324,7 @@ rgbImg render(normImg filtered, int nbL, int nbC, redCol rColors){
 
             int pixelVal(filtered[i][j]);
 
-            rendered[i][j].r = rColors[pixelVal].r;
-            rendered[i][j].g = rColors[pixelVal].g;
-            rendered[i][j].b = rColors[pixelVal].b;
+            rendered[i][j] = rColors[pixelVal];
         }
     }
     return rendered;
