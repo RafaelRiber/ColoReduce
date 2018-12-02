@@ -10,12 +10,12 @@
 #include <vector>
 #include <cmath>
 #include <string>
-
 using namespace std;
 
-typedef struct {
-    int r, g, b;
-} Pixel;
+const int maxVal(255);
+const double epsilon(0.001);
+
+struct Pixel;
 
 typedef vector<vector<int>>   normImg;
 typedef vector<vector<Pixel>> rgbImg;
@@ -23,15 +23,16 @@ typedef vector<Pixel>         redCol;
 typedef vector<double>        thresholdList;
 typedef vector<int>           counter;
 
-const int maxVal(255);
-const double epsilon(0.001);
+struct Pixel{
+    int r, g, b;
+};
 
 //Décomposition du fichier d'entrée
 struct InputImg{
     int nbR; // Nombre de couleurs réduites
     int nbF; // Nombre de filtrages
-    int nbC; // Nombre de pixels horizontaux
-    int nbL; // Nombre de pixels verticaux
+    unsigned int nbC; // Nombre de pixels horizontaux
+    unsigned int nbL; // Nombre de pixels verticaux
     redCol rColors;           // Liste des couleurs réduites
     thresholdList thresholds; // Liste des seuils
     rgbImg inputImg;          // Pixels de l'image d'entrée
@@ -53,14 +54,13 @@ void inputPixels(InputImg& input);
 
 // Fonctions de transformation
 normImg normalize(InputImg rgb);
-void filter(normImg& norm, int nbF, int nbL, int nbC, int nbR);
+void filter(normImg& norm, int nbL, int nbC, int nbF, int nbR);
 int getPixelValue(int x, int y, int nbR, normImg& copy);
+void blackEdge(normImg &norm, int nbF, int nbL, int nbC);
 
 // Fonction de rendu
 rgbImg render(normImg filtered, int nbL, int nbC, redCol rColors);
 void printRGB(rgbImg rgb, int nbL, int nbC);
-
-void blackEdge(normImg &norm, int nbF, int nbL, int nbC);
 
 int main()
 {
@@ -68,7 +68,7 @@ int main()
 
     normImg norm(normalize(image));
 
-    filter(norm, image.nbF, image.nbL, image.nbC, image.nbR);
+    filter(norm, image.nbL, image.nbC, image.nbF, image.nbR);
 
     rgbImg rendered(render(norm, image.nbL, image.nbC, image.rColors));
 
@@ -126,55 +126,64 @@ InputImg fileRead(){
 }
 
 void inputReduced(InputImg &input){
-    // Nombre de couleurs
-    cin >> input.nbR;
-    if(input.nbR < 2 or input.nbR > maxVal){
-        error_nbR(input.nbR);
+    int n(0);
+
+    cin >> n;
+    if(n < 2 or n > maxVal){
+        error_nbR(n);
         exit(0);
     }
+    input.nbR = n;
 
-    // Valeurs des couleurs
-    input.rColors = vector<Pixel>(input.nbR + 1, {0,0,0});
-    input.rColors[0] = {0,0,0}; //La première couleur est toujours 0
+    // La première couleur est toujours le noir
+    input.rColors.push_back({0,0,0});
 
-    for (int i(1); i <= input.nbR; i++){
-        cin >> input.rColors[i].r;
-        cin >> input.rColors[i].g;
-        cin >> input.rColors[i].b;
+    for (int i(1); i < n+1; i++){
+        Pixel p;
+        cin >> p.r;
+        cin >> p.g;
+        cin >> p.b;
 
-        if(input.rColors[i].r < 0 or input.rColors[i].r > maxVal){
+        if(p.r < 0 or p.r > maxVal){
             error_color(i);
             exit(0);
         }
-        if(input.rColors[i].g < 0 or input.rColors[i].g > maxVal){
+        if(p.g < 0 or p.g > maxVal){
             error_color(i);
             exit(0);
         }
-        if(input.rColors[i].b < 0 or input.rColors[i].b > maxVal){
+        if(p.b < 0 or p.b > maxVal){
             error_color(i);
             exit(0);
         }
+
+        input.rColors.push_back(p);
     }
 }
 
 void inputThresholds(InputImg& input){
-    input.thresholds = vector<double> (input.nbR, 0.0);
-    input.thresholds[0] = 0;
+
+    input.thresholds.push_back(0.0);
 
     for (int i(1); i < input.nbR; i++){
-        cin >> input.thresholds[i];
-        double deltaThresholds(abs(input.thresholds[i] - input.thresholds[i-1]));
+        double t;
+        cin >> t;
+
+        double deltaThresholds(abs(t - input.thresholds[i-1]));
+
         if(deltaThresholds < epsilon){
-            error_threshold(input.thresholds[i]);
+            error_threshold(t);
             exit(0);
         }
-        if(input.thresholds[i] < input.thresholds[i-1]){
-            error_threshold(input.thresholds[i]);
+        if(t < input.thresholds[i-1]){
+            error_threshold(t);
             exit(0);
         }
+
+        input.thresholds.push_back(t);
     }
 
-    input.thresholds[input.nbR] = 1.0;
+    input.thresholds.push_back(1.0);
 }
 
 void inputFilters(InputImg& input){
@@ -191,40 +200,46 @@ void inputDimensions(InputImg& input){
 }
 
 void inputPixels(InputImg& input){
-    rgbImg inputImg = vector<vector<Pixel>> (input.nbL,vector<Pixel>(input.nbC));
-    input.inputImg = inputImg;
+    unsigned int l = input.nbL;
+    unsigned int c = input.nbC;
 
-    for (int i(0); i < input.nbL; i++){
-        for (int j(0); j < input.nbC; j++){
+    input.inputImg.resize(l);
 
-            cin >> input.inputImg[i][j].r;
-            cin >> input.inputImg[i][j].g;
-            cin >> input.inputImg[i][j].b;
+    for (auto &i : input.inputImg) {
+        for (size_t j(0); j < c; j++) {
 
-            if(input.inputImg[i][j].r < 0 or input.inputImg[i][j].r > maxVal){
-                error_color(input.inputImg[i][j].r);
+            Pixel p;
+            cin >> p.r;
+            cin >> p.g;
+            cin >> p.b;
+
+            if (p.r < 0 or p.r > maxVal) {
+                error_color(p.r);
                 exit(0);
             }
-            if(input.inputImg[i][j].g < 0 or input.inputImg[i][j].g > maxVal){
-                error_color(input.inputImg[i][j].g);
+            if (p.g < 0 or p.g > maxVal) {
+                error_color(p.g);
                 exit(0);
             }
-            if(input.inputImg[i][j].b < 0 or input.inputImg[i][j].b > maxVal){
-                error_color(input.inputImg[i][j].b);
+            if (p.b < 0 or p.b > maxVal) {
+                error_color(p.b);
                 exit(0);
             }
+
+            i.push_back(p);
         }
     }
 }
 
 normImg normalize(InputImg rgb){
-
-    normImg norm = vector<vector<int>> (rgb.nbL,vector<int>(rgb.nbC));
+    int l = rgb.nbL;
+    int c = rgb.nbC;
+    normImg norm(l,vector<int>(c));
 
     int nbR(rgb.nbR);
 
-    for (int i(0); i < rgb.nbL; i++){
-        for (int j(0); j < rgb.nbC; j++){
+    for (unsigned int i(0); i < rgb.nbL; i++){
+        for (unsigned int j(0); j < rgb.nbC; j++){
             int r(rgb.inputImg[i][j].r);
             int g(rgb.inputImg[i][j].g);
             int b(rgb.inputImg[i][j].b);
@@ -245,7 +260,7 @@ normImg normalize(InputImg rgb){
     return norm;
 }
 
-void filter(normImg& norm, int nbF, int nbL, int nbC, int nbR) {
+void filter(normImg& norm, int nbL, int nbC, int nbF, int nbR) {
 
     normImg copy = norm;
     int val(0);
@@ -301,7 +316,7 @@ int getPixelValue(int x, int y, int nbR, normImg& copy){
 rgbImg render(normImg filtered, int nbL, int nbC, redCol rColors){
     rgbImg rendered;
 
-    rgbImg inputImg = vector<vector<Pixel>> (nbL,vector<Pixel>(nbC));
+    rgbImg inputImg(nbL,vector<Pixel>(nbC));
     rendered = inputImg;
 
     for (int i(0); i < nbL; i++){
@@ -329,6 +344,5 @@ void printRGB(rgbImg rgb, int nbL, int nbC){
         }
         cout << endl;
     }
-
     cout << endl; // Pour que le résultat soit identique à celui de la demo
 }
