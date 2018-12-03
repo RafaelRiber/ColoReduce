@@ -7,7 +7,8 @@
 \usepackage[makeroom]{cancel}
 
 
-\SetKwIF{Si}{SinonSi}{sinon}{Si}{}{Sinon si}{}{}
+\SetKwIF{Si}{SinonSi}{}{Si}{}{Sinon}{}{Fin}
+
 \SetKwFor{Pour}{Pour}{}{Fin}
 
 \begin{document}
@@ -18,6 +19,14 @@
 \hfill Novembre - Décembre 2018
 
 \section*{Phase d'analyse}
+Decrire l’organisation generale du programme en faisant ressortir la mise en oeuvre des principes d’abstraction et de re-utilisation.\\
+
+Le programme est divisé en 5 fonctions de lecture regroupées sous \texttt{fileRead()}, 4 fonctions de transformation, et 2 fonctions de rendu:
+
+Au sein de la fonction \texttt{fileRead}, executée dans \texttt{main} et qui regroupe les autres fonctions de lecture du fichier d'entrée, on crée tout d'abord une strucure \texttt{"image"} de type \texttt{InputImg} qui stockera toutes les informations du fichier d'entrée nécessaires dans des champs facilement accessibles. 
+On execute ensuite dans \texttt{fileRead} les fonctions \texttt{inputReduced, inputThresholds, inputFilters, inputDimensions} et \texttt{inputPixels} qui remplissent chacune un champ de cette structure qui leur est passée par référence, respectivement le nombre et les valeurs des couleurs réduites, les valeurs des seuils, le nombre de filtres, les dimensions \texttt{nbL} et \texttt{nbC}, et les différentes couleurs des pixels de l'image à traiter, tout en vérifiant la validité de ces données et en renvoyant des erreurs en cas d'une mauvaise valeur. Le résultat de cette lecture est stocké dans la structure de type \texttt{InputImg} appelée \texttt{image}.\\
+
+Cette structure est ensuite passée à la première fonction de transformation, appelée \texttt{normalize}, qui crée un tableau de type \texttt{NormImg} appelé \texttt{norm}, et calcule 
 
 \newpage
 \section*{Algorithme de filtrage}
@@ -57,7 +66,7 @@
    				  	  	  	  			    $val \gets c$\\
    				  	  	  	  			    Continuer à la ligne 20.
    				  	  	  	  			  }
-   				  	  	  	  			\Sinon{$val \gets 0$}
+   				  	  	  	  			\SinonSi{}{$val \gets 0$}
    				  	  	  	  		}
    				  	  	  	  }
    				  	  	  }
