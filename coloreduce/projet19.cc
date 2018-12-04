@@ -258,7 +258,7 @@ Color colorRead(){
 NormImg normalize(InputImg rgb){
     int l = rgb.nbL;
     int c = rgb.nbC;
-    NormImg norm(l,vector<int>(c));
+    NormImg normOut(l,vector<int>(c));
 
     int nbR(rgb.nbR);
 
@@ -274,15 +274,15 @@ NormImg normalize(InputImg rgb){
 
             for (int k(0); k <= nbR; k++){
                 if (k == nbR && normInt >= rgb.thresholds[k-1]){
-                    norm[i][j] = nbR;
+                    normOut[i][j] = nbR;
                 }
                 if (normInt >= rgb.thresholds[k-1] && normInt < rgb.thresholds[k]){
-                    norm[i][j] = k;
+                    normOut[i][j] = k;
                 }
             }
         }
     }
-    return norm;
+    return normOut;
 }
 
 void filter(NormImg& norm, int nbL, int nbC, int nbF, int nbR) {
