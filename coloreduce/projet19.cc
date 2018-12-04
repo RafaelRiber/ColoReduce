@@ -19,8 +19,9 @@
 using namespace std;
 
 const int maxVal(255);
-const int filterBlack(0);
+const int filterColor(0);
 const double epsilon(0.001);
+const double firstThreshold(0.0);
 const double lastThreshold(1.0);
 
 struct Color;
@@ -57,6 +58,7 @@ void error_nb_filter(int nb_filter);
 
 // Fonctions de lecture
 InputImg fileRead();
+Color colorRead();
 void inputReduced(InputImg& input);
 void inputThresholds(InputImg& input);
 void inputFilters(InputImg& input);
@@ -67,7 +69,7 @@ void inputPixels(InputImg& input);
 NormImg normalize(InputImg rgb);
 void filter(NormImg& norm, int nbL, int nbC, int nbF, int nbR);
 int getPixelValue(int x, int y, int nbR, NormImg& copy);
-void blackEdge(NormImg& norm, int nbF, int nbL, int nbC);
+void blackEdge(NormImg& norm, int nbL, int nbC, int nbF);
 
 // Fonction de rendu
 RGBImg render(NormImg filtered, int nbL, int nbC, ReducedColors rColors);
@@ -75,11 +77,11 @@ void   printRGB(RGBImg rgb, int nbL, int nbC);
 
 int main()
 {
-    // On lit le fichier d'entrée, et on le stocke dans une structure "InputImg"
+    // On lit le fichier d'entrée, et on le stocke dans la structure "image"
     InputImg image(fileRead());
 
     // On calcule la valeur normalisée des pixels de l'image d'entrée, et on stocke
-    // le résultat dans un tableau
+    // le résultat dans un tableau "norm"
     NormImg norm(normalize(image));
 
     // On filtre l'image normalisée
@@ -158,10 +160,7 @@ void inputReduced(InputImg& input){
     input.rColors.push_back(black);
 
     for (int i(1); i < n+1; i++){
-        Color p;
-        cin >> p.r;
-        cin >> p.g;
-        cin >> p.b;
+        Color p(colorRead());
 
         if(p.r < 0 or p.r > maxVal){
             error_color(i);
@@ -182,7 +181,7 @@ void inputReduced(InputImg& input){
 
 void inputThresholds(InputImg& input){
 
-    input.thresholds.push_back(0.0);
+    input.thresholds.push_back(firstThreshold);  // Le premier seuil est fixe
 
     for (int i(1); i < input.nbR; i++){
         double t;
@@ -203,7 +202,7 @@ void inputThresholds(InputImg& input){
     }
 
     // Le dernier seuil est toujours 1.0
-    input.thresholds.push_back(lastThreshold);
+    input.thresholds.push_back(lastThreshold);   // Le dernier seuil est fixe
 }
 
 void inputFilters(InputImg& input){
@@ -228,10 +227,7 @@ void inputPixels(InputImg& input){
     for (auto &i : input.inputImg) {
         for (size_t j(0); j < c; j++) {
 
-            Color p;
-            cin >> p.r;
-            cin >> p.g;
-            cin >> p.b;
+            Color p(colorRead());
 
             if (p.r < 0 or p.r > maxVal) {
                 error_color(p.r);
@@ -249,6 +245,14 @@ void inputPixels(InputImg& input){
             i.push_back(p);
         }
     }
+}
+
+Color colorRead(){
+    Color p;
+    cin >> p.r;
+    cin >> p.g;
+    cin >> p.b;
+    return p;
 }
 
 NormImg normalize(InputImg rgb){
@@ -297,10 +301,10 @@ void filter(NormImg& norm, int nbL, int nbC, int nbF, int nbR) {
     }
 
 //  Bordure noire
-    blackEdge(norm, nbF, nbL, nbC);
+    blackEdge(norm, nbL, nbC, nbF);
 }
 
-void blackEdge(NormImg& norm, int nbF, int nbL, int nbC) {
+void blackEdge(NormImg& norm, int nbL, int nbC, int nbF) {
     if (nbF > 0) {
         for (int i(0); i < nbL; i++) {
             for (int j(0); j < nbC; j++) {
@@ -316,13 +320,22 @@ int getPixelValue(int x, int y, int nbR, NormImg& copy){
 
     NeighborCounter count(nbR + 1);
     int current(0);
+
+    // On itère parmi les voisins du pixel de coordonnées (x,y)
     for (int i(-1); i <= 1; i++) {
         for (int j(-1); j <= 1; j++) {
+
             if (i != 0 or j != 0) {
+                // On stocke la valeur d'un voisin
                 current = copy[x + i][y + j];
+
+                // On compte le nombre de voisins identiques dans une liste "count"
                 for (int c(0); c <= nbR; c++) {
                     if (c == current) {
+
                         count[c] = count[c] + 1;
+
+                        // Condition d'arrêt si on a 6 voisins de même valeur
                         if (count[c] >= 6) {
                             return c;
                         }
@@ -331,7 +344,7 @@ int getPixelValue(int x, int y, int nbR, NormImg& copy){
             }
         }
     }
-    return filterBlack;
+    return filterColor;
 }
 
 RGBImg render(NormImg filtered, int nbL, int nbC, ReducedColors rColors){
