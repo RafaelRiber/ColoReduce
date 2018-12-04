@@ -8,6 +8,16 @@
 
 \usepackage{graphicx}
 
+\usepackage[]{textcomp}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=15mm,
+ right=15mm,
+ top=15mm,
+ }
+
 
 \SetKwIF{Si}{SinonSi}{}{Si}{}{Sinon}{}{Fin}
 
@@ -16,19 +26,23 @@
 \begin{document}
 \noindent
 \large\textbf{Mini-Projet C\raisebox{.5\height}{\scalebox{.5}{++}}} \hfill \textbf{RIBER Rafael} \\
-\large\textbf{ColoReduce}\\
+\large\textbf{ColoReduce}\hfill \textbf{EL-BA1}\\
 \normalsize ICC Pratique - CS-119\\
 \hfill Novembre - Décembre 2018
 
 \section*{Phase d'analyse}
-\textit{"Decrire l’organisation generale du programme en faisant ressortir la mise en oeuvre des principes d’abstraction et de re-utilisation."}\\
-
 Le programme est divisé en 5 fonctions de lecture regroupées sous \texttt{fileRead()}, 4 fonctions de transformation, et 2 fonctions de rendu:
+\subparagraph{\textit{Lecture:}}
+Au sein de la fonction \texttt{fileRead}, executée dans \texttt{main}, on commence par déclarer une structure \texttt{"input"} de type \texttt{InputImg}. On execute ensuite les fonctions \texttt{inputReduced, inputThresholds, inputFilters, inputDimensions} et \texttt{inputPixels} qui remplissent chacune un champ de cette structure qui leur est passée par référence, respectivement le nombre \texttt{nbR} et les valeurs des couleurs réduites, les valeurs des seuils, le nombre de filtres \texttt{nbF}, les dimensions \texttt{nbL} et \texttt{nbC}, et les différentes couleurs des pixels de l'image à traiter, tout en vérifiant la validité de ces données et en renvoyant des erreurs en cas d'une mauvaise valeur. Le résultat de cette lecture est stocké dans la structure de type \texttt{InputImg} appelée \texttt{"image"} au sein de la fonction \texttt{main}.
 
-Au sein de la fonction \texttt{fileRead}, executée dans \texttt{main} et qui regroupe les autres fonctions de lecture du fichier d'entrée, on crée tout d'abord une strucure \texttt{"image"} de type \texttt{InputImg} qui stockera toutes les informations du fichier d'entrée nécessaires dans des champs facilement accessibles. 
-On execute ensuite dans \texttt{fileRead} les fonctions \texttt{inputReduced, inputThresholds, inputFilters, inputDimensions} et \texttt{inputPixels} qui remplissent chacune un champ de cette structure qui leur est passée par référence, respectivement le nombre et les valeurs des couleurs réduites, les valeurs des seuils, le nombre de filtres, les dimensions \texttt{nbL} et \texttt{nbC}, et les différentes couleurs des pixels de l'image à traiter, tout en vérifiant la validité de ces données et en renvoyant des erreurs en cas d'une mauvaise valeur. Le résultat de cette lecture est stocké dans la structure de type \texttt{InputImg} appelée \texttt{image}.\\
+\subparagraph{\textit{Seuillage:}}
+Cette structure est ensuite passée par référence à la première fonction de transformation executée dans \texttt{main} appelée \texttt{normalize}, qui crée un tableau de type \texttt{NormImg} appelé \texttt{"normOut"}, calcule pour chaque pixel son intensité normalisée $I_N$ à partir des intensités RVB de ce dernier et détermine ensuite le code couleur de chaque pixel selon la valeur de cette intensité, ainsi que les seuils et la liste de couleurs réduites donnés en entrée. Le résultat de cette opération est stocké au sein de \texttt{main} dans un tableau \texttt{"norm"} de type \texttt{NormImg}.
 
-Cette structure est ensuite passée à la première fonction de transformation, appelée \texttt{normalize}, qui crée un tableau de type \texttt{NormImg} appelé \texttt{norm}, et calcule 
+\subparagraph{\textit{Filtrage:}} On passe par référence à la fonction \texttt{filter} le tableau \texttt{"norm"}, ainsi que les dimensions de l'image d'entrée, le nombre \texttt{nbF}, et le nombre \texttt{nbR}. Pendant l'opération de filtrage (dans la fonction \texttt{filter}), la fonction \texttt{getPixelValue} calcule la nouvelle valeur de chaque pixel selon la valeur des pixels voisins. Le tableau est modifié par référence et l'image filtrée se trouve ainsi dans le tableau \texttt{"norm"} à la fin des \texttt{nbF} filtrages. La fonction \texttt{blackEdge}, executée au sein de \texttt{filter} après les filtrages, applique un bord noir d'un pixel de largeur tout autour de l'image filtrée, si \texttt{nbF} $> 0$.
+
+\subparagraph{\textit{Rendu et fin:}} La fonction \texttt{render} génère un tableau \texttt{RGBImg} de structures de type \texttt{Color} contenant les valeurs RVB de chaque pixel à partir de l'indice entier calculé durant le seuillage et le filtrage ainsi que la couleur à l'indice correspondant dans la liste de couleurs réduites donnée en entrée. Le résultat est stocké dans le tableau \texttt{"rendered"} de type \texttt{RBGImg}.
+
+La fonction \texttt{printRGB} affiche dans le terminal le tableau \texttt{rendered}, en ajoutant l'en-tête "P3" et en imprimant des espaces entre les valeurs RVB successives, ainsi que des retours à la ligne après chaque ligne de l'image.
 
 \newpage
 \section*{Algorithme de filtrage}
@@ -103,9 +117,9 @@ On a donc $N_i = (c - 2)(l-2)$ pixels à filtrer $f$ fois, et $N_b = (2c + 2(l-2
 %&= 8 \cdot r_{max} \bigg(f \cdot (c - 2)(l-2) + (2c + 2(l-2))\bigg) \nonumber \\
 % &= 8 \cdot r_{max}\bigg((fcl-2fc-2fl+4f) + (2c+2l-4)\bigg)\nonumber \\
 %&= 8 \cdot r_{max}\bigg(flc - 2fc - 2fl + 4f + 2c\bigg) \nonumber \\
-$$N_{pixels} = 8 \cdot r_{max} \bigg(f \cdot N_i + N_b \bigg)
-= 8 \cdot \underbrace{r_{max}\underbrace{\bigg(flc - f \cdot \bigg(2c + 2l - 4 - \frac{2c}{f}\bigg)\bigg)}_{\leq f\cdot l\cdot c}}_{\leq r_{max} \cdot f\cdot l\cdot c} \leq 8\cdot rflc$$
-Et donc: $$N_{pixels} \leq 8\cdot rflc$$
+%$$N_{pixels} = 8 \cdot r_{max} \bigg(f \cdot N_i + N_b \bigg)
+%= 8 \cdot \underbrace{r_{max}\underbrace{\bigg(flc - f \cdot \bigg(2c + 2l - 4 - \frac{2c}{f}\bigg)\bigg)}%_{\leq f\cdot l\cdot c}}_{\leq r_{max} \cdot f\cdot l\cdot c} \leq 8\cdot rflc$$
+%Et donc: $$N_{pixels} \leq 8\cdot rflc$$
 
-On a ainsi une complexité de $\mathcal{O}(N_{pixels}) \leq \mathcal{O}(8\cdot r\cdot f\cdot l\cdot c)$, et donc une complexité de type $\mathcal{O}(?????????????????)$.
+%On a ainsi une complexité de $\mathcal{O}(N_{pixels}) \leq \mathcal{O}(8\cdot r\cdot f\cdot l\cdot c)$, et %donc une complexité de type $\mathcal{O}(?????????????????)$.
 \end{document}
