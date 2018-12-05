@@ -67,8 +67,8 @@ void inputPixels(InputImg& input);
 
 // Fonctions de transformation
 NormImg normalize(InputImg rgb);
-void filter(NormImg& norm, int nbL, int nbC, int nbF, int nbR);
-int getPixelValue(int x, int y, int nbR, NormImg& copy);
+void filter(NormImg& source, int nbL, int nbC, int nbF, int nbR);
+int getPixelValue(int x, int y, int nbR, NormImg& source);
 void blackEdge(NormImg& norm, int nbL, int nbC, int nbF);
 
 // Fonction de rendu
@@ -80,8 +80,7 @@ int main()
     // On lit le fichier d'entrée, et on le stocke dans la structure "image"
     InputImg image(fileRead());
 
-    // On calcule la valeur normalisée des pixels de l'image d'entrée, et on stocke
-    // le résultat dans un tableau "norm"
+    // On seuille l'image d'entrée, et on stocke le résultat dans un tableau "norm"
     NormImg norm(normalize(image));
 
     // On filtre l'image normalisée
@@ -184,7 +183,7 @@ void inputThresholds(InputImg& input){
     input.thresholds.push_back(firstThreshold);  // Le premier seuil est fixe
 
     for (int i(1); i < input.nbR; i++){
-        double t;
+        double t(0);
         cin >> t;
 
         double deltaThresholds(abs(t - input.thresholds[i-1]));
@@ -219,8 +218,8 @@ void inputDimensions(InputImg& input){
 }
 
 void inputPixels(InputImg& input){
-    unsigned int l = input.nbL;
-    unsigned int c = input.nbC;
+    unsigned int l(input.nbL);
+    unsigned int c(input.nbC);
 
     input.inputImg.resize(l);
 
@@ -248,7 +247,7 @@ void inputPixels(InputImg& input){
 }
 
 Color colorRead(){
-    Color p;
+    Color p = {0,0,0};
     cin >> p.r;
     cin >> p.g;
     cin >> p.b;
@@ -285,38 +284,26 @@ NormImg normalize(InputImg rgb){
     return normOut;
 }
 
-void filter(NormImg& norm, int nbL, int nbC, int nbF, int nbR) {
+void filter(NormImg& source, int nbL, int nbC, int nbF, int nbR) {
 
-    NormImg copy = norm;
+    NormImg destination = source;
     int val(0);
 
     for (int n(1); n <= nbF; n++){
         for (int x(1); x < nbL-1; x++) {
             for (int y(1); y < nbC-1; y++){
-                val = getPixelValue(x, y, nbR, copy);
-                norm[x][y] = val;
+                val = getPixelValue(x, y, nbR, source);
+                destination[x][y] = val;
             }
         }
-        copy = norm;
+        source = destination;
     }
 
 //  Bordure noire
-    blackEdge(norm, nbL, nbC, nbF);
+    blackEdge(source, nbL, nbC, nbF);
 }
 
-void blackEdge(NormImg& norm, int nbL, int nbC, int nbF) {
-    if (nbF > 0) {
-        for (int i(0); i < nbL; i++) {
-            for (int j(0); j < nbC; j++) {
-                if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1) {
-                    norm[i][j] = 0;
-                }
-            }
-        }
-    }
-}
-
-int getPixelValue(int x, int y, int nbR, NormImg& copy){
+int getPixelValue(int x, int y, int nbR, NormImg& source){
 
     NeighborCounter count(nbR + 1);
     int current(0);
@@ -327,7 +314,7 @@ int getPixelValue(int x, int y, int nbR, NormImg& copy){
 
             if (i != 0 or j != 0) {
                 // On stocke la valeur d'un voisin
-                current = copy[x + i][y + j];
+                current = source[x + i][y + j];
 
                 // On compte le nombre de voisins identiques dans une liste "count"
                 for (int c(0); c <= nbR; c++) {
@@ -345,6 +332,18 @@ int getPixelValue(int x, int y, int nbR, NormImg& copy){
         }
     }
     return filterColor;
+}
+
+void blackEdge(NormImg& norm, int nbL, int nbC, int nbF) {
+    if (nbF > 0) {
+        for (int i(0); i < nbL; i++) {
+            for (int j(0); j < nbC; j++) {
+                if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1) {
+                    norm[i][j] = 0;
+                }
+            }
+        }
+    }
 }
 
 RGBImg render(NormImg filtered, int nbL, int nbC, ReducedColors rColors){
