@@ -18,11 +18,15 @@
 #include <string>
 using namespace std;
 
-const int maxVal(255);
-const int filterColor(0);
-const double epsilon(0.001);
-const double firstThreshold(0.0);
-const double lastThreshold(1.0);
+const int maxVal(255);             // Intensité maximale d'une composante de couleur
+
+const int filterColor(0);          // Indice de couleur utilisé dans le filtrage
+                                   // dans le cas ou on ne trouverait pas 6 voisins
+                                   // de la même valeur
+
+const double epsilon(0.001);       // Utile dans la vérification des seuils
+const double firstThreshold(0.0);  // Premier seuil implicite
+const double lastThreshold(1.0);   // Dernier seuil implicite
 
 struct Color;
 
@@ -38,7 +42,7 @@ struct Color{
 
 //Décomposition du fichier d'entrée
 struct InputImg{
-    int nbR;                  // Nombre de couleurs réduites (2-255)
+    int nbR;                  // Nombre de couleurs réduites
     int nbF;                  // Nombre de filtrages
     unsigned int nbC;         // Nombre de pixels horizontaux
     unsigned int nbL;         // Nombre de pixels verticaux
@@ -48,7 +52,7 @@ struct InputImg{
 };
 
 // Première couleur réduite
-const Color black = {0,0,0};
+const Color black = {0,0,0};  // Première couleur réduite constante
 
 // Fonctions d'erreur
 void error_nbR(int nbR);
@@ -90,7 +94,7 @@ int main()
     // filtrée
     RGBImg rendered(render(norm, image.nbL, image.nbC, image.rColors));
 
-    // On sort l'image RGB résultat correctement formatée au format PPM
+    // On imprime l'image RGB résultat correctement formatée au format PPM
     printRGB(rendered, image.nbL, image.nbC);
 
     return 0;
@@ -186,6 +190,7 @@ void inputThresholds(InputImg& input){
         double t(0);
         cin >> t;
 
+        // Vérification d'écart entre le seuil actuel et le précédent
         double deltaThresholds(abs(t - input.thresholds[i-1]));
 
         if(deltaThresholds < epsilon){
@@ -199,8 +204,6 @@ void inputThresholds(InputImg& input){
 
         input.thresholds.push_back(t);
     }
-
-    // Le dernier seuil est toujours 1.0
     input.thresholds.push_back(lastThreshold);   // Le dernier seuil est fixe
 }
 
@@ -246,6 +249,7 @@ void inputPixels(InputImg& input){
     }
 }
 
+// Lecture d'une couleur
 Color colorRead(){
     Color p = {0,0,0};
     cin >> p.r;
