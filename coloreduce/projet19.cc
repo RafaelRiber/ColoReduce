@@ -7,9 +7,9 @@
  *
  * Ce programme prend en entrée un fichier contenant des instructions de
  * normalisation (nombre et valeurs RGB de couleurs réduites, seuils de
- * normalisation) et d'un nombre N de filtrages à effectuer, ainsi qu'une image au
+ * normalisation) et d'un nombre F de filtrages à effectuer, ainsi qu'une image au
  * format PPM, et renvoie cette image, réduite aux couleurs données en entrée, puis
- * filtrée N fois.
+ * filtrée F fois.
 */
 
 #include <iostream>
