@@ -19,11 +19,14 @@
 using namespace std;
 
 const int maxVal(255);             // Intensité maximale d'une composante de couleur
+const int minNbR(2);               // Nombre minimum de couleurs réduites
+const int maxNbR(255);             // Nombre maximum de couleurs réduites
 
 const int filterColor(0);          // Indice de couleur utilisé dans le filtrage
                                    // dans le cas ou on ne trouverait pas 6 voisins
                                    // de la même valeur
 
+const int maxSameVals(6);          // Condition d'arrêt pour le filtrage
 const double epsilon(0.001);       // Utile dans la vérification des seuils
 const double firstThreshold(0.0);  // Premier seuil implicite
 const double lastThreshold(1.0);   // Dernier seuil implicite
@@ -82,17 +85,17 @@ void   printRGB(RGBImg rgb, int nbL, int nbC);
 int main()
 {
     // On lit le fichier d'entrée, et on le stocke dans la structure "image"
-    InputImg image(fileRead());
+    InputImg image = fileRead();
 
     // On seuille l'image d'entrée, et on stocke le résultat dans un tableau "norm"
-    NormImg norm(normalize(image));
+    NormImg norm = normalize(image);
 
     // On filtre l'image normalisée
     filter(norm, image.nbL, image.nbC, image.nbF, image.nbR);
 
     // On crée une image RGB résultat à partir des couleurs réduites et de l'image
     // filtrée
-    RGBImg rendered(render(norm, image.nbL, image.nbC, image.rColors));
+    RGBImg rendered = render(norm, image.nbL, image.nbC, image.rColors);
 
     // On imprime l'image RGB résultat correctement formatée au format PPM
     printRGB(rendered, image.nbL, image.nbC);
@@ -153,7 +156,7 @@ void inputReduced(InputImg& input){
     int n(0);
 
     cin >> n;
-    if(n < 2 or n > maxVal){
+    if(n < minNbR or n > maxNbR){
         error_nbR(n);
         exit(0);
     }
@@ -251,7 +254,7 @@ void inputPixels(InputImg& input){
 
 // Lecture d'une couleur
 Color colorRead(){
-    Color p = {0,0,0};
+    Color p = black;
     cin >> p.r;
     cin >> p.g;
     cin >> p.b;
@@ -327,7 +330,7 @@ int getPixelValue(int x, int y, int nbR, NormImg& source){
                         count[c] = count[c] + 1;
 
                         // Condition d'arrêt si on a 6 voisins de même valeur
-                        if (count[c] >= 6) {
+                        if (count[c] >= maxSameVals) {
                             return c;
                         }
                     }
@@ -342,8 +345,10 @@ void blackEdge(NormImg& norm, int nbL, int nbC, int nbF) {
     if (nbF > 0) {
         for (int i(0); i < nbL; i++) {
             for (int j(0); j < nbC; j++) {
+
+                // Si le pixel est en bordure, on modifie
                 if (i == 0 or j == 0 or i == nbL - 1 or j == nbC - 1) {
-                    norm[i][j] = 0;
+                    norm[i][j] = filterColor;
                 }
             }
         }
