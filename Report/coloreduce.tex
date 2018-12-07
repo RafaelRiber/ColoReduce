@@ -135,11 +135,10 @@ Dans le pire des cas, on parcourt tous les pixels n'étant pas en bordure de l'i
 On a donc $N_i = (nbC - 2)(nbL-2)$ pixels à filtrer $f$ fois, et $N_b = (2nbC + 2(nbL-2))$ pixels en bordure, le tout multiplié par le nombre maximum de couleurs réduites $r_{max} = 255$ que l'on parcourt 8 fois pour les pixels voisins, ce qui donne:
 \begin{align}
 N_{pixels} &= 8 \cdot r_{max} \cdot (f \cdot N_i + N_b ) \nonumber \\
-&= 8 \cdot r_{max}  (f \cdot (nbC - 2)(nbL-2) + (2nbC + 2(nbL-2))) \nonumber
+&= 8 \cdot r_{max}  (f \cdot (nbC - 2)(nbL-2) + (2nbC + 2(nbL-2))) \nonumber \\
+&\leq 8\cdot 255\cdot f\cdot nbC\cdot nbL \nonumber
 \end{align}
-On remarque que : $N_{pixels} \leq 8\cdot r_{max}\cdot f\cdot nbC\cdot nbL$\\
-
-Et on a ainsi une complexité $\mathcal{O}(8\cdot r_{max}\cdot f\cdot nbC\cdot nbL)$.
+Le terme $r_{max}\cdot 8$ étant constant, on a ainsi une complexité $\mathcal{O}(f\cdot nbC\cdot nbL)$.
 \end{minipage}\hfil
 \begin{minipage}{0.4\linewidth}
 \begin{tikzpicture}
