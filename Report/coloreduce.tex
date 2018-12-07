@@ -7,7 +7,6 @@
 \usepackage[makeroom]{cancel}
 
 \usepackage{graphicx}
-\usepackage[]{mwe}
 \usepackage[]{textcomp}
 
 \usepackage{geometry}
@@ -131,16 +130,16 @@ Ce pseudocode décrit un seul filtrage.\\
 
 \section*{Analyse de complexité}
 \begin{minipage}{0.5\linewidth}
-Dans le pire des cas, on parcourt tous les pixels n'étant pas en bordure de l'image $f$ fois, en parcourant une liste de longueur $r$ pour chacun des 8 voisins d'un pixel, puis les pixels de bordure une seule fois.
+Dans le pire des cas, on parcourt tous les pixels n'étant pas en bordure de l'image $f$ fois, en parcourant une liste de courleurs de longueur maximale $r_{max}$ pour chacun des 8 voisins d'un pixel, puis les pixels de bordure une seule fois.
 
 On a donc $N_i = (nbC - 2)(nbL-2)$ pixels à filtrer $f$ fois, et $N_b = (2nbC + 2(nbL-2))$ pixels en bordure, le tout multiplié par le nombre maximum de couleurs réduites $r_{max} = 255$ que l'on parcourt 8 fois pour les pixels voisins, ce qui donne:
 \begin{align}
 N_{pixels} &= 8 \cdot r_{max} \cdot (f \cdot N_i + N_b ) \nonumber \\
 &= 8 \cdot r_{max}  (f \cdot (nbC - 2)(nbL-2) + (2nbC + 2(nbL-2))) \nonumber
 \end{align}
-On remarque que : $N_{pixels} \leq 8\cdot r\cdot f\cdot nbC\cdot nbL$\\
+On remarque que : $N_{pixels} \leq 8\cdot r_{max}\cdot f\cdot nbC\cdot nbL$\\
 
-Et on a ainsi une complexité $\mathcal{O}(8\cdot r\cdot f\cdot nbC\cdot nbL)$.
+Et on a ainsi une complexité $\mathcal{O}(8\cdot r_{max}\cdot f\cdot nbC\cdot nbL)$.
 \end{minipage}\hfil
 \begin{minipage}{0.4\linewidth}
 \begin{tikzpicture}
@@ -245,7 +244,7 @@ legend style={font=\footnotesize,at={(0.1,0.7)}, anchor=south west, legend cell 
 \end{axis}
 \end{tikzpicture}%
 
-{\blfootnote{Sur ce graphique, on voit le temps d'exécution de mon programme sur le fichier test \texttt{tree.txt} selon le nombre de filtrage appliqué, en comparaison avec le programme \texttt{demo}.}}
+{\blfootnote{Sur ce graphique, on voit le temps d'exécution de mon programme \texttt{projet} sur le fichier test \texttt{tree.txt} selon le nombre de filtrage appliqué, en comparaison avec le programme \texttt{demo}.}}
 
 %\begin{tikzpicture}
 %
