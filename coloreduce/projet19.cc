@@ -63,6 +63,7 @@ void error_color(int id);
 void error_threshold(double invalid_val);
 void error_nb_filter(int nb_filter);
 
+
 // Fonctions de lecture
 InputImg fileRead();
 Color colorRead();
