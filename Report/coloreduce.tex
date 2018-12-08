@@ -34,6 +34,10 @@
 
 \SetKwFor{Pour}{Pour}{}{Fin}
 
+\SetKwComment{Comment}{$\triangleright$\ }{}
+
+\newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}% Remove line number for one line
+
 \makeatletter
 \def\blfootnote{\xdef\@thefnmark{}\@footnotetext}
 \makeatother
@@ -50,83 +54,84 @@
 \section*{Phase d'analyse}
 Le programme est divisé en 5 fonctions de lecture regroupées sous la fonction \texttt{fileRead}, 4 fonctions de transformation (\texttt{normalize}, \texttt{filter}, \texttt{getPixelValue} et \texttt{blackEdge}), et 2 fonctions de rendu (\texttt{render} et \texttt{printRGB}):
 \subparagraph{\underline{\textit{Lecture:}}}
-Au sein de la fonction \texttt{fileRead}, executée dans \texttt{main}, on commence par déclarer une structure \texttt{"input"} de type \texttt{InputImg}. On execute ensuite les fonctions \texttt{inputReduced, inputThresholds, inputFilters, inputDimensions} et \texttt{inputPixels} qui remplissent chacune un champ de cette structure qui leur est passée par référence, respectivement le nombre \texttt{nbR} et les valeurs des couleurs réduites, les valeurs des seuils, le nombre de filtres \texttt{nbF}, les dimensions \texttt{nbL} et \texttt{nbC}, et les différentes couleurs des pixels de l'image à traiter, tout en vérifiant la validité de ces données et en renvoyant des erreurs en cas d'une mauvaise valeur. Le résultat de cette lecture est stocké dans la structure de type \texttt{InputImg} appelée \texttt{"image"} au sein de la fonction \texttt{main}. La fonction \texttt{colorRead}, qui lit 3 valeurs d'intensité et les stocke sous forme d'une structure \texttt{Color} est utilisée tout au long de la partie lecture pour lire les différentes valeurs RVB en entrée.
+Au sein de la fonction \texttt{fileRead}, executée dans \texttt{main}, on commence par déclarer une structure \texttt{"input"} de type \texttt{InputImg}. On execute ensuite les fonctions \texttt{inputReduced, inputThresholds, inputFilters, inputDimensions} et \texttt{inputPixels} qui remplissent chacune un champ de cette structure qui leur est passée par référence, respectivement le nombre \texttt{nbR} et les valeurs des couleurs réduites, les valeurs des seuils, le nombre de filtres \texttt{nbF}, les dimensions \texttt{nbL} et \texttt{nbC}, et les différentes couleurs des pixels de l'image à traiter, tout en vérifiant la validité de ces données et en renvoyant des erreurs en cas d'une mauvaise valeur. Le résultat de cette lecture est stocké dans la structure de type \texttt{InputImg} appelée \texttt{"image"} au sein de la fonction \texttt{main}. 
+
+La fonction \texttt{colorRead}, qui lit 3 valeurs d'intensité et les stocke sous forme d'une structure \texttt{Color} est utilisée tout au long de la partie lecture pour lire les différentes valeurs RVB en entrée.
 
 \subparagraph{\underline{\textit{Seuillage:}}}
-Cette structure est ensuite passée par référence à la première fonction de transformation executée dans \texttt{main} appelée \texttt{normalize}, qui crée un tableau de type \texttt{NormImg} appelé \texttt{"normOut"}, calcule pour chaque pixel son intensité normalisée $I_N$ à partir des intensités RVB de ce dernier et détermine ensuite le code couleur de chaque pixel selon la valeur de cette intensité, ainsi que les seuils et la liste de couleurs réduites donnés en entrée. Le résultat de cette opération est stocké au sein de \texttt{main} dans un tableau \texttt{"norm"} de type \texttt{NormImg}.
+Cette structure est ensuite passée par référence à la première fonction de transformation executée dans \texttt{main} appelée \texttt{normalize}, qui crée un tableau de type \texttt{NormImg} appelé \texttt{"normOut"} de taille $\texttt{nbL} \times \texttt{nbC}$, calcule pour chaque pixel son intensité normalisée $I_N$ à partir des intensités RVB de ce dernier et détermine ensuite le code couleur de chaque pixel selon la valeur de cette intensité, ainsi que les seuils et la liste de couleurs réduites donnés en entrée. Le résultat de cette opération est stocké au sein de \texttt{main} dans un tableau \texttt{"norm"} de type \texttt{NormImg}.
 
-\subparagraph{\underline{\textit{Filtrage:}}} On passe par référence à la fonction \texttt{filter} le tableau \texttt{"norm"}, ainsi que les dimensions de l'image d'entrée, le nombre \texttt{nbF}, et le nombre \texttt{nbR}. Pendant l'opération de filtrage (dans la fonction \texttt{filter}), la fonction \texttt{getPixelValue} calcule la nouvelle valeur de chaque pixel selon la valeur des pixels voisins. Le tableau est modifié par référence et l'image filtrée se trouve ainsi dans le tableau \texttt{"norm"} à la fin des \texttt{nbF} filtrages. La fonction \texttt{blackEdge}, executée au sein de \texttt{filter} après les filtrages, applique un bord noir d'un pixel de largeur tout autour de l'image filtrée, dans le cas où \texttt{nbF} $> 0$.
+\subparagraph{\underline{\textit{Filtrage:}}} On passe par référence à la fonction \texttt{filter} le tableau \texttt{"norm"}, ainsi que les dimensions de l'image d'entrée, le nombre \texttt{nbF}, et le nombre \texttt{nbR}. Pendant l'opération de filtrage (dans la fonction \texttt{filter}), la fonction \texttt{getPixelValue} calcule la nouvelle valeur de chaque pixel selon la valeur des pixels voisins. Le tableau est modifié par référence et l'image filtrée se trouve ainsi dans le tableau \texttt{"norm"} à la fin des \texttt{nbF} filtrages. La fonction \texttt{blackEdge}, executée au sein de \texttt{filter} après les filtrages, applique par référence toujours un bord noir d'un pixel de largeur tout autour de l'image filtrée, dans le cas où \texttt{nbF} $> 0$.
 
 \subparagraph{\underline{\textit{Rendu et fin:}}} La fonction \texttt{render} génère un tableau \texttt{RGBImg} de structures de type \texttt{Color} contenant les valeurs RVB de chaque pixel à partir de l'indice entier calculé durant le seuillage et le filtrage ainsi que la couleur à l'indice correspondant dans la liste de couleurs réduites donnée en entrée. Le résultat est stocké dans le tableau \texttt{"rendered"} de type \texttt{RBGImg}.
 
-La fonction \texttt{printRGB} affiche dans le terminal le tableau \texttt{rendered}, en ajoutant l'en-tête "P3" et en imprimant des espaces entre les valeurs RVB successives, ainsi que des retours à la ligne après chaque ligne de l'image.
+La fonction \texttt{printRGB} affiche enfin dans le terminal le tableau \texttt{rendered}, en ajoutant l'en-tête \texttt{"P3"} et en imprimant des espaces entre les valeurs RVB successives, ainsi que des retours à la ligne après chaque ligne de l'image.
 
 \newpage
 \section*{Algorithme de filtrage}
-Ce pseudocode décrit un seul filtrage.\\
+\begin{minipage}[t]{0.5\linewidth}
+\strut\vspace*{-\baselineskip}\newline
 \begin{algorithm}[H]
-\SetSideCommentLeft
-    \KwIn{Tableau $source$ de taille $C \times L$, %nombre de filtres à appliquer $f$,
-    nombre de couleurs réduites $r$.}
-    \KwResult{Tableau $destination$\\
+    \KwIn{Tableau $source$ de taille $L \times C$,
+    nombre de couleurs réduites $r$, nombre $f$ de filtrages à effectuer.}
+    \KwResult{Tableau $destination$ passé dans $source$ par référence\\
     \textbf{Remarque: }Les listes et tableaux sont indexés à 0.\\\hrulefill}
-    
-    %\underline{Filtrage}$(N,x,y,f,r)$\
     $destination \gets source$\\
     $val \gets 0$\\
-    $count$ est une liste de longueur fixe $r$.
     
-%    \Pour{$n$ \upshape{de} $1$ \upshape{à} $f$}
-%      {
+    \Pour{$n$ \upshape{de} $1$ \upshape{à} $f$}
+      {
       	\Pour{$x$ \upshape{de} $1$ \upshape{à} $L - 1$}
       	  {
       	  \Pour{$y$ \upshape{de} $1$ \upshape{à} $C - 1$}
       	    {
-    			$current \gets 0$\\
-   				\Pour{$i$ \upshape{de} $-1$ \upshape{à} $1$}
-   				  {
-   				  	\Pour{$j$ \upshape{de} $-1$ \upshape{à} $1$}
-   				  	  {
-   				  	  	\Si{$i \neq 0$ \upshape{ou} $j \neq 0$}
-   				  	  	  {
-   				  	  	    $current \gets source$[$x + i$][$y + j$]\\
-   				  	  	  	\Pour{$c$ \upshape{de} $0$ \upshape{à} $r$}
-   				  	  	  	  {
-   				  	  	  	  	\Si {$c = current$}
-   				  	  	  	  		{
-   				  	  	  	  			$count$[$c$] = $count$[$c$]$ + 1$\\
-   				  	  	  	  			\Si {$count$\upshape{[$c$]} $\geq 6$}
-   				  	  	  	  			  {
-   				  	  	  	  			    $val \gets c$\\
-   				  	  	  	  			    Continuer à la ligne 20.   
-   				  	  	  	  			  }
-   				  	  	  	  			\SinonSi{}{$val \gets 0$}
-   				  	  	  	  		}
-   				  	  	  	  }
-   				  	  	  }
-   				  	  }
-   				  }
-             $destination$[$x$][$y$] $\gets val$
+    			$val \gets $\texttt{getPixelValues(}$x, y, r, source$\texttt{)}\\
+    			$destination$[$x$][$y$] $\gets val$
       	    }
-      	  }
-%      	  $source \gets destination$
-%        }
-%        \Si{$f > 0$} 
-%          {
-%        	\Pour{$i$ \upshape{de} $0$ \upshape{à} $L$} 
-%        	{
-%        	  \Pour{$j$ \upshape{de} $0$ \upshape{à} $C$}
-%        	  {
-%                \Si{$i = 0$ \upshape{ou} $j = 0$ \upshape{ou} $i = L - 1$ \upshape{ou} $j = C - 1$}
-%                  {
-%                    $N$[$i$][$j$] $\gets 0$
-%                  }
-%              }
-%            }
-%        }
-       \textbf{Sortir} $destination$
+      	 }
+      $source \gets destination$
+      }
+      Appliquer la bordure noire (modification par référence)\\
+       \textbf{Fin}
 \caption{ \textsc{Filtrage}}
 \end{algorithm}
+\end{minipage}
+\begin{minipage}[t]{0.5\linewidth}
+\strut\vspace*{-\baselineskip}\newline
+\begin{algorithm}[H]
+    \KwIn{Coordonnées $x$, $y$ du pixel dont on calcule la valeur, tableau $source$ (input du filtrage)}
+    \KwResult{Valeur à donner au pixel\\
+    \textbf{Remarque:} \texttt{maxSameVals} et \texttt{filterColor} sont des constantes du problème, valant ici respectivement 6 et 0.\\\hrulefill}
+    $count$ est une liste de longueur fixe $r + 1$.\\
+    $current \gets 0$
+    
+      	\Pour{$i$ \upshape{de} $-1$ \upshape{à} $1$}
+      	  {
+      	  \Pour{$j$ \upshape{de} $-1$ \upshape{à} $1$}
+      	    {
+    	       \Si{$i \neq 0$ \upshape{ou} $j \neq 0$}
+    	       {
+    	       		$current$ = $source$[$x + i$][$y + j$]\\
+    	       		\Pour{$c$ \upshape{de} 0 \upshape{à} $r$}
+    	       		{
+    	       			\Si{$c = current$}
+    	       			{
+    	       			 $count$[$c$]$= count$[$c$]$ + 1$\\
+    	       			 \Si{$count[c]\geq$ \upshape{\texttt{maxSameVals}}}
+    	       			 {
+    	       			 \textbf{Sortir} $c$\\
+    	       			 \textbf{Fin}
+    	       			 } 
+    	       			}
+    	       		}
+    	       }
+      	    }
+      	}
+       \textbf{Sortir} \upshape\texttt{filterColor}\\
+       \textbf{Fin}
+\caption{\texttt{getPixelValues(x, y, r,} $source$\texttt{)} : Valeur d'un pixel en fonction de ses voisins}
+\end{algorithm}
+\end{minipage}
 
 \section*{Analyse de complexité}
 \begin{minipage}{0.5\linewidth}
@@ -136,7 +141,7 @@ On a donc $N_i = (nbC - 2)(nbL-2)$ pixels à filtrer $f$ fois, et $N_b = (2nbC +
 \begin{align}
 N_{pixels} &= 8 \cdot r_{max} \cdot (f \cdot N_i + N_b ) \nonumber \\
 &= 8 \cdot r_{max}  (f \cdot (nbC - 2)(nbL-2) + (2nbC + 2(nbL-2))) \nonumber \\
-&\leq 8\cdot 255\cdot f\cdot nbC\cdot nbL \nonumber
+&\leq 8\cdot r_{max}\cdot f\cdot nbC\cdot nbL \nonumber
 \end{align}
 Le terme $r_{max}\cdot 8$ étant constant, on a ainsi une complexité $\mathcal{O}(f\cdot nbC\cdot nbL)$.
 \end{minipage}\hfil
@@ -154,13 +159,13 @@ xmax=20,
 xminorticks=true,
 xlabel style={font=\footnotesize\color{white!15!black}},
 xlabel={Nombre de filtrages},
-ymin=0.8,
+ymin=0,
 ymax=3.5,
 yminorticks=true,
 ylabel style={font=\footnotesize\color{white!15!black}},
 ylabel={Temps d'exécution (s)},
 axis background/.style={fill=white},
-legend style={font=\footnotesize,at={(0.1,0.7)}, anchor=south west, legend cell align=left, align=left, draw=white!11!black}
+legend style={font=\tiny,at={(0.1,0.764)}, anchor=south west, legend cell align=left, align=left, draw=white!11!black}
 ]
 \addplot [color=mycolor1,mark=x]
   table[row sep=crcr]{%
@@ -243,7 +248,7 @@ legend style={font=\footnotesize,at={(0.1,0.7)}, anchor=south west, legend cell 
 \end{axis}
 \end{tikzpicture}%
 
-{\blfootnote{Sur ce graphique, on voit le temps d'exécution de mon programme \texttt{projet} sur le fichier test \texttt{tree.txt} selon le nombre de filtrage appliqué, en comparaison avec le programme \texttt{demo}.}}
+{\blfootnote{Sur ce graphique, on voit le temps d'exécution de mon programme \texttt{projet} sur le fichier test \texttt{tree.txt} selon le nombre de filtrage appliqué, en comparaison avec le programme \texttt{demo} ainsi que le double du temps mis par le programme \texttt{demo}.}}
 
 %\begin{tikzpicture}
 %
